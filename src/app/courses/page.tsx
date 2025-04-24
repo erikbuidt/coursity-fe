@@ -1,4 +1,5 @@
-import { Button } from '@/components/ui/button'
+'use client'
+import { CourseCard } from '@/components/custom/course-card'
 import {
   Carousel,
   CarouselContent,
@@ -7,12 +8,21 @@ import {
   CarouselPrevious,
 } from '@/components/ui/carousel'
 import Image from 'next/image'
-export default function Home() {
+import Autoplay from 'embla-carousel-autoplay'
+import FadeInStaggered from '@/components/custom/fade-in'
+function Course() {
   return (
     <div className="container mx-auto">
-      <Carousel className="w-full mt-3 bg-gradient-to-r from-gray-900 to-blue-900 rounded-2xl">
-        <CarouselContent>
-          <CarouselItem>
+      <Carousel
+        className="w-full mt-8 rounded-2xl overflow-hidden"
+        plugins={[
+          Autoplay({
+            delay: 2000,
+          }),
+        ]}
+      >
+        <CarouselContent className="">
+          <CarouselItem className="bg-gradient-to-r from-gray-900 to-blue-900 ">
             <div className="flex justify-between p-4">
               <div className="w-[640px]">
                 <div>Hello</div>
@@ -30,14 +40,14 @@ export default function Home() {
               </div>
             </div>
           </CarouselItem>
-          <CarouselItem>
+          <CarouselItem className="bg-gradient-to-r from-purple-500 to-blue-600">
             <div className="flex justify-between p-4">
               <div className="w-[640px]">
                 <div>Hello</div>
               </div>
               <div className="">
                 <Image
-                  src="/images/Banner_web_ReactJS.png"
+                  src="/images/Banner_01_2.png"
                   alt="banner"
                   layout="responsive"
                   className="object-cover bg-center"
@@ -52,14 +62,13 @@ export default function Home() {
         <CarouselPrevious />
         <CarouselNext />
       </Carousel>
-
-      {/* <Button>Click me</Button> */}
-      {/* <div class="bg-amber-500 text-white p-4">
-        <p class="text-gray-300">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-        <button class="bg-orange-500 text-white hover:bg-orange-400 px-4 py-2 rounded">
-          Click Me
-        </button>
-      </div> */}
+      <FadeInStaggered>
+        {Array.from({ length: 10 }).map((_, i) => (
+          <CourseCard key={i} title="test" description="sssss" imageSrc="/images/course-1.jpg" />
+        ))}
+      </FadeInStaggered>
     </div>
   )
 }
+
+export default Course
