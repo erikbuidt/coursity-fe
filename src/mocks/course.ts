@@ -1,0 +1,153 @@
+import type { Course } from '@/types/course.type'
+
+export const mockCourses: Course[] = [
+  {
+    id: 1,
+    slug: 'javascript-for-beginners',
+    title: 'JavaScript for Beginners',
+    description:
+      'A complete introduction to JavaScript, perfect for beginners looking to dive into web development.',
+    image_url: 'https://example.com/images/js-course.jpg',
+    price: 99.99,
+    discount_price: 49.99,
+    duration: 10,
+    will_learns: [
+      'Basics of JavaScript',
+      'Variables and Data Types',
+      'Functions and Scope',
+      'DOM Manipulation',
+    ],
+    requirements: ['Basic computer knowledge', 'Willingness to learn'],
+  },
+  {
+    id: 2,
+    slug: 'react-from-scratch',
+    title: 'React from Scratch',
+    description:
+      'Learn React step-by-step and build powerful web apps with modern tools and practices.',
+    image_url: 'https://example.com/images/react-course.jpg',
+    price: 129.99,
+    discount_price: 79.99,
+    duration: 15,
+    will_learns: [
+      'React components and JSX',
+      'State and props',
+      'React Router',
+      'Hooks and Context API',
+    ],
+    requirements: ['Basic knowledge of JavaScript', 'Understanding of HTML/CSS'],
+  },
+  {
+    id: 3,
+    slug: 'fullstack-web-dev',
+    title: 'Full-Stack Web Development Bootcamp',
+    description:
+      'Become a full-stack web developer with hands-on projects in both frontend and backend.',
+    image_url: 'https://example.com/images/fullstack-course.jpg',
+    price: 199.99,
+    discount_price: 149.99,
+    duration: 25,
+    will_learns: [
+      'Frontend development with React',
+      'Backend APIs with Node.js and Express',
+      'Database integration with MongoDB',
+      'Deploying full-stack apps',
+    ],
+    requirements: [
+      'Familiarity with HTML, CSS, and JavaScript',
+      'Strong motivation to learn full-stack development',
+    ],
+  },
+  {
+    id: 4,
+    slug: 'python-for-data-science',
+    title: 'Python for Data Science',
+    description:
+      'Master Python and its powerful libraries for data analysis, visualization, and machine learning.',
+    image_url: 'https://example.com/images/python-data.jpg',
+    price: 119.99,
+    discount_price: 59.99,
+    duration: 12,
+    will_learns: [
+      'Python programming fundamentals',
+      'Using Pandas and NumPy',
+      'Data visualization with Matplotlib and Seaborn',
+      'Basic machine learning with Scikit-learn',
+    ],
+    requirements: [
+      'No prior coding experience required',
+      'Basic understanding of math/statistics is helpful',
+    ],
+  },
+  {
+    id: 5,
+    slug: 'ui-ux-design-principles',
+    title: 'UI/UX Design Principles',
+    description:
+      'Learn to create beautiful, user-friendly interfaces and experiences through practical design principles.',
+    image_url: 'https://example.com/images/ui-ux.jpg',
+    price: 89.99,
+    discount_price: 39.99,
+    duration: 8,
+    will_learns: [
+      'User-centered design process',
+      'Wireframing and prototyping',
+      'Design tools like Figma',
+      'Accessibility and usability',
+    ],
+    requirements: ['Interest in design', 'No design experience needed'],
+  },
+  {
+    id: 6,
+    slug: 'nodejs-api-development',
+    title: 'Node.js API Development',
+    description: 'Learn to build powerful REST APIs using Node.js, Express, and MongoDB.',
+    image_url: 'https://example.com/images/node-api.jpg',
+    price: 109.99,
+    discount_price: 69.99,
+    duration: 14,
+    will_learns: [
+      'Node.js basics',
+      'Creating RESTful APIs with Express',
+      'CRUD operations with MongoDB',
+      'Authentication and security',
+    ],
+    requirements: ['Knowledge of JavaScript', 'Basic understanding of HTTP and APIs'],
+  },
+  {
+    id: 7,
+    slug: 'intro-to-cybersecurity',
+    title: 'Intro to Cybersecurity',
+    description:
+      'Explore the fundamentals of cybersecurity and learn how to protect systems and data.',
+    image_url: 'https://example.com/images/cybersecurity.jpg',
+    price: 139.99,
+    discount_price: 89.99,
+    duration: 18,
+    will_learns: [
+      'Cybersecurity concepts',
+      'Network security basics',
+      'Ethical hacking overview',
+      'Best practices for secure systems',
+    ],
+    requirements: ['General IT knowledge', 'Curiosity about security threats and solutions'],
+  },
+  {
+    id: 8,
+    slug: 'mobile-apps-with-flutter',
+    title: 'Build Mobile Apps with Flutter',
+    description:
+      'Create beautiful cross-platform mobile apps using Dart and the Flutter framework.',
+    image_url: 'https://example.com/images/flutter.jpg',
+    price: 149.99,
+    discount_price: 99.99,
+    duration: 16,
+    will_learns: [
+      'Flutter UI components',
+      'Navigation and routing',
+      'State management with Provider',
+      'Deploying apps to iOS and Android',
+    ],
+    requirements: ['Basic programming knowledge', 'Familiarity with object-oriented programming'],
+  },
+]

@@ -1,29 +1,16 @@
 import * as React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { BookCheck, User } from 'lucide-react'
-
-interface CourseCardProps {
-  title: string
-  description: string
-  imageSrc?: string
-  instructor?: string
-  duration?: string
-  price?: string
-  onEnroll?: () => void
+import { Play, Clock, Star } from 'lucide-react'
+import type { Course } from '@/types/course.type'
+import { Avatar, AvatarFallback, AvatarImage } from '@radix-ui/react-avatar'
+interface CourseProps {
+  course: Course
 }
 
-export function CourseCard({
-  title,
-  description,
-  imageSrc,
-  instructor,
-  duration,
-  price,
-  onEnroll,
-}: CourseCardProps) {
+export function CourseCard({ course }: CourseProps) {
   return (
-    <div className="group relative space-y-2 shadow-md  rounded-lg">
+    <div className="group relative space-y-2 shadow-md rounded-lg overflow-hidden">
       <figure className="group-hover:opacity-90">
         <Image
           src="/images/course-1.jpg"
@@ -34,21 +21,34 @@ export function CourseCard({
         />
       </figure>
       <div className="flex flex-col justify-between p-6">
-        <span className="text-primary font-bold text-lg mb-1">12000</span>
-        <h3 className="text-lg">
-          <Link href={'/'}>
+        <div className="flex gap-1 items-center">
+          <div className="text-xl font-thin text-gray-500 line-through">{course.price} ₫</div>
+          <div className="text-xl font-semibold text-red-600">{course.discount_price} ₫</div>
+        </div>
+        <h3 className="text-md font-semibold min-h-12">
+          <Link href={`/courses/${course.slug}`}>
             <span aria-hidden="true" className="absolute inset-0" />
-            <h3 className="text-2xl font-semibold">Learning to Write as a Professional Author</h3>
+            {course.title}
           </Link>
         </h3>
-        <div className="flex items-center justify-between mt-10">
-          <div className="flex gap-1 text-gray-500">
-            <BookCheck />
-            <span>24 Lesson</span>
+        <div className="line-clamp-2 text-md font-thin text-gray-500">{course.description}</div>
+
+        <div className="flex items-center justify-between mt-2 text-xs">
+          <div className="flex gap-2 items-center text-gray-500">
+            <Avatar className="w-6 h-6 rounded-full overflow-hidden flex items-center justify-center bg-gray-300">
+              <AvatarImage className="" src="https://github.com/shadcn.png" alt="@shadcn" />
+              <AvatarFallback>E</AvatarFallback>
+            </Avatar>
+            <span>Erik</span>
           </div>
-          <div className="flex gap-1 text-gray-500">
-            <User />
-            69 Students
+          <div className="flex gap-1 items-center text-gray-500">
+            <Play size={20} />
+            <span>24</span>
+          </div>
+
+          <div className="flex gap-1 items-center text-gray-500">
+            <Clock size={20} />
+            1h30p
           </div>
         </div>
       </div>

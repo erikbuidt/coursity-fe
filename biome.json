@@ -24,6 +24,9 @@
       "recommended": true,
       "correctness": {
         "noUnusedVariables": "error"
+      },
+      "style":{
+        "useSelfClosingElements": "warn"
       }
     }
   },

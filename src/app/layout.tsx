@@ -37,36 +37,7 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-        <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-          <header className="block shadow-lg">
-            <div className="container mx-auto">
-              <div className="flex items-center justify-between p-4 gap-4 h-16">
-                <Link href="/">
-                  <Image src="/images/logo-icon.png" width={50} height={50} alt="logo" />
-                </Link>
-                <NavBar />
-                <div className="space-x-2">
-                  <SignedOut>
-                    <SignInButton>
-                      <Button className="bg-primary ">
-                        <Link href="/sign-in" className="text-gray-900">
-                          Sign in
-                        </Link>
-                      </Button>
-                    </SignInButton>
-                    <SignUpButton>
-                      <Link href="/sign-up" className="text-black text-sm">
-                        Sign up
-                      </Link>
-                    </SignUpButton>
-                  </SignedOut>
-                  <SignedIn>
-                    <UserButton />
-                  </SignedIn>
-                </div>
-              </div>
-            </div>
-          </header>
+        <body className={`${geistSans.variable} ${geistMono.variable} overflow-x-hidden`}>
           {children}
         </body>
       </html>
