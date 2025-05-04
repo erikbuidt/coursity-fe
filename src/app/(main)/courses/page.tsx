@@ -1,4 +1,4 @@
-'use client'
+// 'use client'
 import { CourseCard } from '@/components/custom/course-card'
 import {
   Carousel,
@@ -20,7 +20,15 @@ import {
 } from '@/components/ui/breadcrumb'
 import { mockCourses } from '@/mocks/course'
 import Pagination from '@/components/custom/pagination'
-function Courses() {
+import { getCourses } from '@/services/courseService'
+async function Courses(props: {
+  searchParams: Promise<{ page?: string; search?: string }>
+}) {
+  const searchParams = await props.searchParams
+
+  const page = Number(searchParams.page) || 1
+  const search = searchParams.search || ''
+  const { items: courses, meta } = await getCourses({ page, search })
   return (
     <>
       <div className="bg-stone-100">
@@ -39,7 +47,7 @@ function Courses() {
         </div>
       </div>
       <div className="container md:max-w-5xl lg:max-w-6xl mx-auto">
-        <Carousel
+        {/* <Carousel
           className="w-full"
           plugins={[
             Autoplay({
@@ -87,10 +95,10 @@ function Courses() {
           </CarouselContent>
           <CarouselPrevious />
           <CarouselNext />
-        </Carousel>
+        </Carousel> */}
 
         <FadeInStaggered className="grid grid-cols-4 gap-4 mt-4">
-          {mockCourses.map((course, i) => (
+          {courses.map((course, i) => (
             <CourseCard key={course.id} course={course} />
           ))}
         </FadeInStaggered>
@@ -100,7 +108,7 @@ function Courses() {
        ))}
      </div> */}
         <div className="mt-4">
-          <Pagination pageSize={20} queryConfig={{ page: 5 }} />
+          <Pagination pageSize={meta.total_pages} queryConfig={{ page: meta.current_page }} />
         </div>
       </div>
     </>

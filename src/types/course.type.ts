@@ -9,6 +9,8 @@ export type Course = {
   duration: number
   will_learns: string[]
   requirements: string[]
+  lesson_count: number
+  chapters: Chapter[]
 }
 export type Pagination<T> = {
   items: T[]
@@ -19,4 +21,20 @@ export type Pagination<T> = {
     total_pages: number
     current_page: number
   }
+}
+
+export type Chapter = {
+  id: number
+  title: string
+  position: number
+  lessons: Lesson[]
+}
+
+export type Lesson = {
+  id: number
+  chapter_id: number
+  duration: number
+  image_url: string
+  video_provider: string
+  title: string
 }

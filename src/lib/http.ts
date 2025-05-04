@@ -37,6 +37,16 @@ const request = async <Response>(
     body,
     method,
   })
+  console.log({
+    ...options,
+    headers: {
+      ...baseHeaders,
+      ...options?.headers,
+      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+    } as any,
+    body,
+    method,
+  })
   const payload: Response = await res.json()
   const data = {
     status: res.status,
