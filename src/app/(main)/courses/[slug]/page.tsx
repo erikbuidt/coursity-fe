@@ -11,16 +11,22 @@ import {
 import { durationToClockFormat } from '@/lib/utils'
 import { getCourse } from '@/services/courseService'
 import { Check, Globe, MonitorPlay } from 'lucide-react'
+import { cookies } from 'next/headers'
 import { Fragment } from 'react'
 import SummaryCourse from './components/summary-course'
+import { notFound } from 'next/navigation'
 
 async function CourseDetail(props: {
   params: Promise<{ slug: string }>
 }) {
   const params = await props.params
   const slug = params.slug.toString()
-  const course = await getCourse(slug)
-
+  const cookieStore = await cookies()
+  const sessionToken = cookieStore.get('__session')
+  const course = await getCourse(slug, sessionToken?.value)
+  if (!course) {
+    notFound()
+  }
   return (
     <>
       <div className="bg-stone-100 ">
@@ -62,8 +68,8 @@ async function CourseDetail(props: {
           </div>
         </div>
       </div>
-      <div className="container md:max-w-5xl lg:max-w-6xl flex gap-3">
-        <div className="flex-2/3 mt-10">
+      <div className="container md:max-w-5xl lg:max-w-6xl grid grid-cols-12 gap-4">
+        <div className="col-span-8 mt-10">
           <div className="border-2 border-gray-200">
             <h3 className="font-bold text-2xl pl-4 pt-4">What you'll learn</h3>
             <ul className="flex flex-wrap p-4 font-semibold text-gray-600 text-sm">
@@ -105,8 +111,8 @@ async function CourseDetail(props: {
             </Fragment>
           ))}
         </div>
-        <div className="flex-1/3">
-          <div className="sticky">
+        <div className="col-span-4">
+          <div className="sticky top-60 ">
             <SummaryCourse course={course} />
           </div>
         </div>

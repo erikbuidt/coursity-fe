@@ -31,7 +31,6 @@ export async function POST(request: NextRequest) {
       if (name === '') return new Response('No name', { status: 400 })
 
       if (event.type === 'user.created') {
-        console.log('created user')
         const user = await createClerkUser({
           clerk_user_id: event.data.id,
           email,

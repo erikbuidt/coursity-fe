@@ -11,6 +11,7 @@ export type Course = {
   requirements: string[]
   lesson_count: number
   chapters: Chapter[]
+  is_enrolled: boolean
 }
 export type Pagination<T> = {
   items: T[]
@@ -37,4 +38,5 @@ export type Lesson = {
   image_url: string
   video_provider: string
   title: string
+  position: number
 }

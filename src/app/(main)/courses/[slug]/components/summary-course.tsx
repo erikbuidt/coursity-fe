@@ -8,33 +8,37 @@ import type { Course } from '@/types/course.type'
 import { useAuth } from '@clerk/nextjs'
 import { auth } from '@clerk/nextjs/server'
 import { File, MonitorPlay, MonitorSmartphone, ShoppingCart, Trophy } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 interface Props {
   course: Course
 }
 function SummaryCourse({ course }: Props) {
   const { getToken } = useAuth()
+  const [isRegister, setIsRegister] = useState<boolean | null>(null)
+  const router = useRouter()
   const handleEnrollCourse = async () => {
     const token = await getToken()
     if (!token) return
-    const rs = await enroll(course.id, token)
-    console.log({ rs })
+    const enrollment = await enroll(course.id, token)
+    if (enrollment) {
+      setIsRegister(true)
+    }
   }
   return (
     <Card className="py-0 gap-0 overflow-hidden relative top-[-220px]">
-      <div>
-        <HeroVideoDialog
-          className="block dark:hidden shadow-none"
-          animationStyle="top-in-bottom-out"
-          videoSrc="https://www.youtube.com/embed/qh3NGpYRG3I?si=4rb-zSdDkVK9qxxb"
-          thumbnailSrc="https://startup-template-sage.vercel.app/hero-light.png"
-          thumbnailAlt="Hero Video"
-        />
-      </div>
+      <HeroVideoDialog
+        className="block dark:hidden shadow-none"
+        animationStyle="top-in-bottom-out"
+        videoSrc="https://www.youtube.com/embed/qh3NGpYRG3I?si=4rb-zSdDkVK9qxxb"
+        thumbnailSrc="https://startup-template-sage.vercel.app/hero-light.png"
+        thumbnailAlt="Hero Video"
+      />
       <CardContent className="py-6">
         {course.discount_price ? (
           <>
             <div className="text-2xl font-semibold text-red-600">
-              {formatCurrency(course.discount_price)}
+              {formatCurrency(course.discount_price)}₫
             </div>
             <div className="text-md font-semibold text-gray-500 line-through">
               {formatCurrency(course.price)} ₫
@@ -65,13 +69,23 @@ function SummaryCourse({ course }: Props) {
           </li>
         </ul>
         <div className="flex flex-col gap-2">
-          <Button className="w-full mt-4" onClick={handleEnrollCourse}>
-            Enroll Now
-          </Button>
-          <Button className="w-full" variant="outline">
-            <ShoppingCart />
-            Add to Cart
-          </Button>
+          {course.is_enrolled || isRegister ? (
+            <>
+              <Button className="w-full mt-4" onClick={() => router.push(`/learn/${course.slug}`)}>
+                Learn Now
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button className="w-full mt-4" onClick={handleEnrollCourse}>
+                Enroll Now
+              </Button>
+              <Button className="w-full" variant="outline">
+                <ShoppingCart />
+                Add to Cart
+              </Button>
+            </>
+          )}
         </div>
       </CardContent>
     </Card>
