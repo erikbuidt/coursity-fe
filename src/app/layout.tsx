@@ -1,18 +1,9 @@
+import ReactQueryProvider from '@/components/provider/react-query'
+import { ClerkProvider } from '@clerk/nextjs'
 import type { Metadata } from 'next'
-import {
-  ClerkProvider,
-  SignInButton,
-  SignUpButton,
-  SignedIn,
-  SignedOut,
-  UserButton,
-} from '@clerk/nextjs'
 import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
-import Link from 'next/link'
-import { Button } from '@/components/ui/button'
-import Image from 'next/image'
-import NavBar from '@/components/custom/nav-bar'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -38,7 +29,10 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en">
         <body className={`${geistSans.variable} ${geistMono.variable} overflow-x-hidden`}>
-          {children}
+          <ReactQueryProvider>
+            {children}
+            <ReactQueryDevtools initialIsOpen />
+          </ReactQueryProvider>
         </body>
       </html>
     </ClerkProvider>

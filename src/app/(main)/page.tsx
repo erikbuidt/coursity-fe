@@ -12,9 +12,7 @@ import {
   CarouselPrevious,
 } from '@/components/ui/carousel'
 import { mockCourses } from '@/mocks/course'
-import { Course } from '@/types/course.type'
 import Autoplay from 'embla-carousel-autoplay'
-import Image from 'next/image'
 import Link from 'next/link'
 const categories = [
   {

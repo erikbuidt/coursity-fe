@@ -9,12 +9,14 @@ interface CollapseProps {
   children: React.ReactNode
   defaultOpen?: boolean
   className?: string
+  element?: React.ReactNode
 }
 
 export default function Collapse({
   title,
   children,
   className = '',
+  element,
   defaultOpen = true,
 }: CollapseProps) {
   const [isOpen, setIsOpen] = useState(defaultOpen)
@@ -33,7 +35,7 @@ export default function Collapse({
     <div className={cn('w-full border bg-white shadow-sm', className)}>
       {/* biome-ignore lint/a11y/useButtonType: <explanation> */}
       <button
-        className="w-full flex items-center justify-between p-2 font-medium text-left"
+        className="w-full flex items-center justify-between px-4 py-2 font-medium text-left"
         onClick={() => setIsOpen(!isOpen)}
       >
         <span>{title}</span>
@@ -41,7 +43,7 @@ export default function Collapse({
           className={`text-primary transition-transform duration-300 ${isOpen ? 'rotate-180' : 'rotate-0'}`}
         />
       </button>
-
+      {element && element}
       <div
         ref={contentRef}
         className="overflow-hidden transition-all duration-500"

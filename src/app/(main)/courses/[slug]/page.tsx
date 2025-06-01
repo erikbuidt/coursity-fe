@@ -9,12 +9,12 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb'
 import { durationToClockFormat } from '@/lib/utils'
-import { getCourse } from '@/services/courseService'
 import { Check, Globe, MonitorPlay } from 'lucide-react'
 import { cookies } from 'next/headers'
 import { Fragment } from 'react'
 import SummaryCourse from './components/summary-course'
 import { notFound } from 'next/navigation'
+import { courseApi } from '@/services/courseService'
 
 async function CourseDetail(props: {
   params: Promise<{ slug: string }>
@@ -23,7 +23,7 @@ async function CourseDetail(props: {
   const slug = params.slug.toString()
   const cookieStore = await cookies()
   const sessionToken = cookieStore.get('__session')
-  const course = await getCourse(slug, sessionToken?.value)
+  const course = await courseApi.getCourse(slug, sessionToken?.value)
   if (!course) {
     notFound()
   }
@@ -97,7 +97,7 @@ async function CourseDetail(props: {
                   {chapter.lessons.map((lesson) => (
                     <li
                       key={lesson.id}
-                      className="flex gap-4 items-center px-2 py-2 hover:bg-accent"
+                      className="flex gap-4 items-center px-4 py-2 hover:bg-accent"
                     >
                       <MonitorPlay className="text-primary" size={20} />
                       <span>{lesson.title}</span>

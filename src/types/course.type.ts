@@ -29,14 +29,25 @@ export type Chapter = {
   title: string
   position: number
   lessons: Lesson[]
+  chapter_lesson_count: number
+  chapter_completed_lesson_count?: number
 }
 
 export type Lesson = {
   id: number
   chapter_id: number
   duration: number
-  image_url: string
+  video_url: string
   video_provider: string
   title: string
   position: number
+  is_completed?: boolean
+}
+export type CourseProgress = {
+  id: number
+  course_id: number
+  user_id: number
+  progress_percent: string
+  completed_at: string
+  last_lesson_id: number
 }

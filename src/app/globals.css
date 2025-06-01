@@ -206,4 +206,8 @@
   .current {
     background: var(--primary);
   }
+
+  .plyr--video {
+    @apply h-[80vh];
+  }
 }

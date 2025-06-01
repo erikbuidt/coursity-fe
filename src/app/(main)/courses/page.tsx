@@ -20,7 +20,7 @@ import {
 } from '@/components/ui/breadcrumb'
 import { mockCourses } from '@/mocks/course'
 import Pagination from '@/components/custom/pagination'
-import { getCourses } from '@/services/courseService'
+import { courseApi } from '@/services/courseService'
 async function Courses(props: {
   searchParams: Promise<{ page?: string; search?: string }>
 }) {
@@ -28,7 +28,7 @@ async function Courses(props: {
 
   const page = Number(searchParams.page) || 1
   const search = searchParams.search || ''
-  const { items: courses, meta } = await getCourses({ page, search })
+  const { items: courses, meta } = await courseApi.getCourses({ page, search })
   return (
     <>
       <div className="bg-stone-100">

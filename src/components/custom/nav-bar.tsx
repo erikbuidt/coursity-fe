@@ -97,12 +97,10 @@ export default function NavBar() {
           </NavigationMenuContent>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <Link href="/docs" passHref>
-            <NavigationMenuLink
-              className={`${navigationMenuTriggerStyle()} bg-primary hover:bg-primary`}
-            >
-              Documentation
-            </NavigationMenuLink>
+          <Link href="/my-courses" passHref>
+            <div className={`${navigationMenuTriggerStyle()} bg-primary hover:bg-primary`}>
+              My learning
+            </div>
           </Link>
         </NavigationMenuItem>
       </NavigationMenuList>
