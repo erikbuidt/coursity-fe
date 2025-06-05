@@ -49,7 +49,7 @@ async function CourseDetail(props: {
         </div>
       </div>
       <div className="bg-black ">
-        <div className="container md:max-w-5xl lg:max-w-6xl py-8">
+        <div className="container md:max-w-5xl lg:max-w-6xl xl:max-w-7xl py-8">
           <div className="grid grid-cols-12 gap-6 text-white">
             <div className="relative col-span-8">
               <h1 className="text-4xl font-bold ">{course.title}</h1>
@@ -68,7 +68,7 @@ async function CourseDetail(props: {
           </div>
         </div>
       </div>
-      <div className="container md:max-w-5xl lg:max-w-6xl grid grid-cols-12 gap-4">
+      <div className="container md:max-w-5xl lg:max-w-6xl xl:max-w-7xl grid grid-cols-12 gap-4">
         <div className="col-span-8 mt-10">
           <div className="border-2 border-gray-200">
             <h3 className="font-bold text-2xl pl-4 pt-4">What you'll learn</h3>

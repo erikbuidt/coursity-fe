@@ -1,26 +1,44 @@
 import * as React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Play, Clock, Star } from 'lucide-react'
+import { Play, Clock, Pencil, Eye, EllipsisVertical } from 'lucide-react'
 import type { Course } from '@/types/course.type'
 import { Avatar, AvatarFallback, AvatarImage } from '@radix-ui/react-avatar'
 import { formatCurrency, formatDuration } from '@/lib/utils'
+import { Button } from '../ui/button'
 interface CourseProps {
   course: Course
 }
 
-export function CourseCard({ course }: CourseProps) {
+export function ManagementCourseCard({ course }: CourseProps) {
   return (
     <div className="group relative space-y-2 shadow-md rounded-lg overflow-hidden">
-      <figure className="group-hover:opacity-90">
-        <Image
-          src="/images/course-1.jpg"
-          className="w-full object-contain"
-          width={370}
-          height={230}
-          alt=""
-        />
-      </figure>
+      <div className="group relative space-y-2  overflow-hidden">
+        <figure className="relative">
+          <Image
+            src="/images/course-1.jpg"
+            className="w-full object-contain"
+            width={370}
+            height={230}
+            alt=""
+          />
+          <div className="absolute bottom-1 flex justify-between w-full px-4 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-[1]">
+            <Link href={`course-management/${course.slug}`}>
+              <Button size="icon" className="scale-95 rounded-full hover:cursor-pointer">
+                <Pencil />
+              </Button>
+            </Link>
+
+            <Button size="icon" className="scale-95 rounded-full hover:cursor-pointer">
+              <Eye />
+            </Button>
+            <Button size="icon" className="scale-95 rounded-full hover:cursor-pointer">
+              <EllipsisVertical />
+            </Button>
+          </div>
+        </figure>
+        {/* ...rest of your code... */}
+      </div>
       <div className="flex flex-col justify-between px-4 py-2">
         <div className="flex gap-1 items-center">
           {course.discount_price ? (
@@ -41,10 +59,8 @@ export function CourseCard({ course }: CourseProps) {
           )}
         </div>
         <h3 className="text-sm font-semibold min-h-8">
-          <Link href={`/courses/${course.slug}`}>
-            <span aria-hidden="true" className="absolute inset-0" />
-            {course.title}
-          </Link>
+          <span aria-hidden="true" className="absolute inset-0" />
+          {course.title}
         </h3>
         <div className="line-clamp-2 text-md font-thin text-sm text-gray-500">
           {course.description}

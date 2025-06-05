@@ -32,7 +32,7 @@ async function Courses(props: {
   return (
     <>
       <div className="bg-stone-100">
-        <div className="container md:max-w-5xl lg:max-w-6xl mx-auto py-4">
+        <div className="container md:max-w-5xl lg:max-w-6xl xl:max-w-7xl mx-auto py-4">
           <Breadcrumb>
             <BreadcrumbList>
               <BreadcrumbItem>
@@ -46,7 +46,7 @@ async function Courses(props: {
           </Breadcrumb>
         </div>
       </div>
-      <div className="container md:max-w-5xl lg:max-w-6xl mx-auto">
+      <div className="container md:max-w-5xl lg:max-w-6xl xl:max-w-7xl mx-auto">
         {/* <Carousel
           className="w-full"
           plugins={[

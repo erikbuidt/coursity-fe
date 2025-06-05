@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "tailwindcss-animated";
+@import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -121,9 +122,7 @@
     @apply bg-background text-foreground;
   }
 
-
 }
-
 
 @layer components {
   .container {
@@ -184,7 +183,7 @@
     animation-duration: 20s;
     fill: white;
   }
-  
+
   @-webkit-keyframes move-forever {
     0% {
       transform: translate3d(-90px, 0, 0);

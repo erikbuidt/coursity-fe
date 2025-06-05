@@ -9,7 +9,6 @@ async function getCourses(queryParams: QueryParams): Promise<Pagination<Course>>
       `/courses?${createSearchParams(queryParams)}`,
       {},
     )
-    console.log(res.payload.data)
     return res.payload.data
   } catch (error: any) {
     console.error('Error fetching courses:', error)

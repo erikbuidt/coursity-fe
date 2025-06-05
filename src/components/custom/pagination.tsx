@@ -1,15 +1,13 @@
-import { QueryConfig } from '@/types/product.type'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import Link from 'next/link'
 
 interface Props {
   pageSize: number
-  queryConfig: QueryConfig
+  queryConfig: { page: number }
 }
 const RANGE = 2
 function Pagination({ pageSize, queryConfig }: Props) {
   const currentPage: number = Number(queryConfig.page || 1)
-  const searchParams = new URLSearchParams(queryConfig)
   const renderPagination = () => {
     let afterDot = false
     let beforeDot = false

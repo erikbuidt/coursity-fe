@@ -18,6 +18,9 @@ export const mockCourses: Course[] = [
       'DOM Manipulation',
     ],
     requirements: ['Basic computer knowledge', 'Willingness to learn'],
+    lesson_count: 0,
+    chapters: [],
+    is_enrolled: false,
   },
   {
     id: 2,
@@ -36,6 +39,9 @@ export const mockCourses: Course[] = [
       'Hooks and Context API',
     ],
     requirements: ['Basic knowledge of JavaScript', 'Understanding of HTML/CSS'],
+    lesson_count: 0,
+    chapters: [],
+    is_enrolled: false,
   },
   {
     id: 3,
@@ -57,6 +63,9 @@ export const mockCourses: Course[] = [
       'Familiarity with HTML, CSS, and JavaScript',
       'Strong motivation to learn full-stack development',
     ],
+    lesson_count: 0,
+    chapters: [],
+    is_enrolled: false,
   },
   {
     id: 4,
@@ -78,6 +87,9 @@ export const mockCourses: Course[] = [
       'No prior coding experience required',
       'Basic understanding of math/statistics is helpful',
     ],
+    lesson_count: 0,
+    chapters: [],
+    is_enrolled: false,
   },
   {
     id: 5,
@@ -96,6 +108,9 @@ export const mockCourses: Course[] = [
       'Accessibility and usability',
     ],
     requirements: ['Interest in design', 'No design experience needed'],
+    lesson_count: 0,
+    chapters: [],
+    is_enrolled: false,
   },
   {
     id: 6,
@@ -113,6 +128,9 @@ export const mockCourses: Course[] = [
       'Authentication and security',
     ],
     requirements: ['Knowledge of JavaScript', 'Basic understanding of HTTP and APIs'],
+    lesson_count: 0,
+    chapters: [],
+    is_enrolled: false,
   },
   {
     id: 7,
@@ -131,6 +149,9 @@ export const mockCourses: Course[] = [
       'Best practices for secure systems',
     ],
     requirements: ['General IT knowledge', 'Curiosity about security threats and solutions'],
+    lesson_count: 0,
+    chapters: [],
+    is_enrolled: false,
   },
   {
     id: 8,
@@ -149,5 +170,8 @@ export const mockCourses: Course[] = [
       'Deploying apps to iOS and Android',
     ],
     requirements: ['Basic programming knowledge', 'Familiarity with object-oriented programming'],
+    lesson_count: 0,
+    chapters: [],
+    is_enrolled: false,
   },
 ]

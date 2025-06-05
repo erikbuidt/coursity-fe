@@ -21,8 +21,8 @@ export default function MainLayout({
   return (
     <section className={`${geistSans.variable} ${geistMono.variable} overflow-x-hidden`}>
       <header className="block shadow-lg bg-primary">
-        <div className="container md:max-w-5xl lg:max-w-7xl">
-          <div className="flex items-center justify-between p-4 gap-4 h-16">
+        <div className="container md:max-w-5xl lg:max-w-6xl xl:max-w-7xl">
+          <div className="flex items-center justify-between p-4 gap-4 h-16 mx-[-20px]">
             <Link href="/">
               <Image src="/images/logo-icon.png" width={50} height={50} alt="logo" />
             </Link>

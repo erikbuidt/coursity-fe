@@ -75,7 +75,7 @@ export default function Home() {
   return (
     <>
       <div className="bg-[url(/images/home1-bg.png)] bg-no-repeat bg-cover bg-center] ">
-        <div className="container md:max-w-5xl lg:max-w-7xl py-24 flex items-center ">
+        <div className="container md:max-w-5xl lg:max-w-6xl xl:max-w-7xl py-24 flex items-center ">
           {/* Left */}
           <div className="mt-5 max-w-xl text-left">
             <FadeInStaggered className="" delay={500}>
@@ -146,7 +146,7 @@ export default function Home() {
           </svg>
         </div>
       </div>
-      <section className="container md:max-w-5xl lg:max-w-7xl">
+      <section className="container md:max-w-5xl lg:max-w-6xl xl:max-w-7xl">
         <h2 className="text-2xl font-bold text-center">Top Categories</h2>
         <Carousel
           className="w-full mt-8"
@@ -185,7 +185,7 @@ export default function Home() {
         </Carousel>
       </section>
 
-      <section className="container mt-20 md:max-w-5xl lg:max-w-7xl">
+      <section className="container mt-20 md:max-w-5xl lg:max-w-6xl xl:max-w-7xl">
         <h2 className="text-2xl font-bold text-center mt-8">Most Popular Courses</h2>
         <FadeInStaggered className="grid grid-cols-4 gap-4 mt-10">
           {mockCourses.map((course, i) => (
@@ -195,7 +195,7 @@ export default function Home() {
       </section>
 
       <section className="mt-20 bg-indigo-950">
-        <div className="container mt-20 py-20 md:max-w-5xl lg:max-w-7xl">
+        <div className="container mt-20 py-20 md:max-w-5xl lg:max-w-6xl xl:max-w-7xl">
           <h2 className="text-4xl font-bold text-white text-center">Why learn with our courses?</h2>
           <div className="max-w-[1200px] mx-auto mt-10">
             <FadeInStaggered className="grid grid-cols-3 gap-8 mt-20 ">
@@ -221,7 +221,7 @@ export default function Home() {
       </section>
 
       <section className="light py-14 md:py-24 bg-white dark:bg-[#0b1727] text-zinc-900 dark:text-white">
-        <div className="container px-4 md:max-w-5xl lg:max-w-7xl">
+        <div className="container px-4 md:max-w-5xl lg:max-w-6xl xl:max-w-7xl">
           <div className="grid grid-cols-12 gap-6 max-w-7xl mx-auto text-center">
             <div className="col-span-12 sm:col-span-6 lg:col-span-3">
               <span className="text-[45px] font-black mb-2">
