@@ -4,7 +4,7 @@ import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-
+import { Toaster } from '@/components/ui/sonner'
 const geistSans = Geist({
   variable: '--font-geist-sans',
   subsets: ['latin'],
@@ -33,6 +33,17 @@ export default function RootLayout({
             {children}
             <ReactQueryDevtools initialIsOpen />
           </ReactQueryProvider>
+          <Toaster
+            position="top-center"
+            toastOptions={{
+              classNames: {
+                success: '!bg-green-500',
+                error: '!bg-red-500',
+                title: '!text-white',
+                icon: '!text-white',
+              },
+            }}
+          />
         </body>
       </html>
     </ClerkProvider>

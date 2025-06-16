@@ -1,3 +1,4 @@
+import { VideoUpload } from '@/components/custom/video-upload'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -8,40 +9,137 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { lessonApi } from '@/services/lessonService'
+import type { Lesson } from '@/types/course.type'
+import { useAuth } from '@clerk/nextjs'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useParams } from 'next/navigation'
+import { useEffect } from 'react'
+import { Controller, useForm } from 'react-hook-form'
+import { toast } from 'sonner'
+type FormData = {
+  title: string
+  video_provider: string
+  video_url: string
+  video_file: File | null
+}
+function EditLesson({ editingLesson }: { editingLesson: Lesson }) {
+  const queryClient = useQueryClient()
+  const { slug } = useParams()
+  console.log({ slug })
+  const { handleSubmit, control, reset, getValues, watch } = useForm<FormData>({
+    defaultValues: {
+      title: '',
+      video_provider: 'system', // or 'system' if you want a default
+      video_url: '',
+      video_file: null,
+    },
+  })
+  const { getToken } = useAuth()
+  const { mutateAsync: updateLesson, isPending: isPendingUpdateLesson } = useMutation({
+    mutationFn: async (arg: {
+      lessonId: number
+      payload: Partial<Lesson>
+    }) => {
+      const { payload, lessonId } = arg
+      const token = await getToken()
+      return lessonApi.updateLesson(lessonId, payload, token || '')
+    },
+    onSuccess: () => {
+      toast.success('Lessons have been update successfully', {})
+      queryClient.invalidateQueries({ queryKey: ['course', slug] })
+    },
+    onError: () => {
+      toast.error('Something went wrong', {})
+    },
+  })
+  const video_provider = watch('video_provider')
+  const formValue = getValues()
 
-function EditLesson() {
+  const onSubmit = (data: FormData) => {
+    updateLesson({ payload: data, lessonId: editingLesson.id })
+  }
+  useEffect(() => {
+    if (
+      editingLesson?.title &&
+      editingLesson.video_provider &&
+      typeof editingLesson.video_provider === 'string' &&
+      editingLesson.video_provider.length > 0
+    ) {
+      reset({
+        title: editingLesson.title,
+        video_provider: editingLesson.video_provider,
+        video_url: editingLesson.video_url,
+        video_file: null,
+      })
+    }
+  }, [editingLesson, reset])
   return (
-    <>
+    <div className="min-h-[370px] flex flex-col">
       <h4 className="font-bold">Edit Lesson</h4>
-      <div className="space-y-2">
-        <Label htmlFor="title">Lesson Title</Label>
-        <Input id="title" name="title" defaultValue="Pedro Duarte" />
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="file">Video Provider</Label>
-        <Select>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Video Provider" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="light">Youtube</SelectItem>
-            <SelectItem value="dark">System</SelectItem>
-            <SelectItem value="system">Vimeo</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="file">Video</Label>
-        <Input id="file" name="file" type="file" />
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="link">Link</Label>
-        <Input id="link" name="link" type="text" />
-      </div>
-      <Button className="w-fit bg-primary ml-auto" variant="outline">
-        Save
-      </Button>
-    </>
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col flex-1 gap-1">
+        <div className="space-y-2">
+          <Label htmlFor="title">Lesson Title</Label>
+          <Controller
+            name="title"
+            control={control}
+            render={({ field }) => <Input {...field} spellCheck />}
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="video_provider">Video Provider</Label>
+          <Controller
+            name="video_provider"
+            control={control}
+            render={({ field }) => {
+              console.log({ value: field.value })
+              return (
+                <Select
+                  value={field.value}
+                  defaultValue={field.value}
+                  onValueChange={field.onChange}
+                >
+                  <SelectTrigger className="w-[180px] m-0">
+                    <SelectValue placeholder="Video Provider" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="youtube">Youtube</SelectItem>
+                    <SelectItem value="system">System</SelectItem>
+                    <SelectItem value="vimeo">Vimeo</SelectItem>
+                  </SelectContent>
+                </Select>
+              )
+            }}
+          />
+        </div>
+        {video_provider === 'system' && (
+          <div className="space-y-2">
+            <Label htmlFor="file">Video</Label>
+            <Controller
+              name="video_file"
+              control={control}
+              render={({ field }) => (
+                <VideoUpload video_preview={getValues('video_url')} {...field} />
+              )}
+            />
+          </div>
+        )}
+        {video_provider !== 'system' && (
+          <div className="space-y-2">
+            <Label htmlFor="link">Link</Label>
+            <Controller
+              name="video_url"
+              control={control}
+              render={({ field }) => <Input {...field} />}
+            />
+          </div>
+        )}
+
+        <div className="mt-auto flex">
+          <Button className="w-fit bg-primary ml-auto">Save</Button>
+        </div>
+      </form>
+    </div>
   )
 }
 

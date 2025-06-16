@@ -14,8 +14,8 @@ export function CourseCard({ course }: CourseProps) {
     <div className="group relative space-y-2 shadow-md rounded-lg overflow-hidden">
       <figure className="group-hover:opacity-90">
         <Image
-          src="/images/course-1.jpg"
-          className="w-full object-contain"
+          src={course.image_url}
+          className="w-full object-cover h-60"
           width={370}
           height={230}
           alt=""
@@ -26,16 +26,16 @@ export function CourseCard({ course }: CourseProps) {
           {course.discount_price ? (
             <>
               <div className="text-lg font-thin text-gray-500 line-through">
-                {formatCurrency(course.price)} ₫
+                {formatCurrency(course.price)} $
               </div>
               <div className="text-lg font-semibold text-red-600">
-                {formatCurrency(course.discount_price)} ₫
+                {formatCurrency(course.discount_price)} $
               </div>
             </>
           ) : (
             <>
               <div className="text-lg font-semibold text-primary ">
-                {formatCurrency(course.price)} ₫
+                {formatCurrency(course.price)} $
               </div>
             </>
           )}
@@ -46,7 +46,7 @@ export function CourseCard({ course }: CourseProps) {
             {course.title}
           </Link>
         </h3>
-        <div className="line-clamp-2 text-md font-thin text-sm text-gray-500">
+        <div className="line-clamp-2 text-md font-thin text-sm text-gray-500 min-h-10">
           {course.description}
         </div>
 

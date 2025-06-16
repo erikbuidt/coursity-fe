@@ -3,7 +3,7 @@ type CustomOptions = Omit<RequestInit, 'method'> & {
 }
 
 const request = async <Response>(
-  method: 'GET' | 'POST' | 'PUT' | 'DELETE',
+  method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH',
   url: string,
   options: CustomOptions | undefined,
 ) => {
@@ -81,6 +81,9 @@ const http = {
   },
   post<Response>(url: string, body: any, options?: Omit<CustomOptions, 'body'> | undefined) {
     return request<Response>('POST', url, { ...options, body })
+  },
+  patch<Response>(url: string, body: any, options?: Omit<CustomOptions, 'body'> | undefined) {
+    return request<Response>('PATCH', url, { ...options, body })
   },
   put<Response>(url: string, body: any, options?: Omit<CustomOptions, 'body'> | undefined) {
     return request<Response>('PUT', url, { ...options, body })

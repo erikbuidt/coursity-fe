@@ -71,11 +71,11 @@ function Learn() {
       const updatedChapters = prev.chapters.map((chapter) => {
         if (chapter.id !== chapterId) return chapter
 
-        const updatedLessons = chapter.lessons.map((lesson) =>
+        const updatedLessons = chapter?.lessons?.map((lesson) =>
           lesson.id === lessonId ? { ...lesson, is_completed: checked } : lesson,
         )
 
-        const completedCount = updatedLessons.filter((l) => l.is_completed).length
+        const completedCount = updatedLessons?.filter((l) => l.is_completed).length
 
         return {
           ...chapter,
@@ -98,7 +98,7 @@ function Learn() {
     if (course) {
       if (!lessonId) {
         const firstChapter = course.chapters.find((chapter) => chapter.position === 1)
-        const firstLesson = firstChapter?.lessons.find((lesson) => lesson.position === 1)
+        const firstLesson = firstChapter?.lessons?.find((lesson) => lesson.position === 1)
         let lastLearningLessonId: string | undefined
         if (courseProgress) {
           lastLearningLessonId = courseProgress.last_lesson_id?.toString()

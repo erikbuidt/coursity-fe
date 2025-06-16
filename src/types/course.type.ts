@@ -1,6 +1,9 @@
+import { z, ZodType } from 'zod' // Add new import
+
 export type Course = {
   id: number
   slug: string
+  category: string
   title: string
   description: string
   image_url: string
@@ -28,8 +31,8 @@ export type Chapter = {
   id: number
   title: string
   position: number
-  lessons: Lesson[]
-  chapter_lesson_count: number
+  lessons?: Lesson[]
+  chapter_lesson_count?: number
   chapter_completed_lesson_count?: number
 }
 
@@ -51,3 +54,34 @@ export type CourseProgress = {
   completed_at: string
   last_lesson_id: number
 }
+
+export type CreateCoursePayload = {
+  title: string
+  description: string
+  thumbnail: File | null | undefined
+  price: number
+  category?: string
+  will_learns: string[]
+  requirements: string[]
+}
+
+export const createCourseSchema = z.object({
+  title: z.string({
+    required_error: 'Title is required',
+  }),
+  description: z.string({
+    required_error: 'Description is required',
+  }),
+  price: z.number({
+    required_error: 'Price is required',
+  }),
+  thumbnail: z
+    .any({
+      required_error: 'Thumbnail is required',
+    })
+    .refine((file) => file instanceof File || file === null, {
+      message: 'Thumbnail must be a file',
+    }),
+  will_learns: z.array(z.string()).min(1, { message: 'At least one is required' }),
+  requirements: z.array(z.string()).min(1, { message: 'At least one is required' }),
+})

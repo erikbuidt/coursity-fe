@@ -16,8 +16,8 @@ export function ManagementCourseCard({ course }: CourseProps) {
       <div className="group relative space-y-2  overflow-hidden">
         <figure className="relative">
           <Image
-            src="/images/course-1.jpg"
-            className="w-full object-contain"
+            src={course.image_url}
+            className="w-full object-cover h-40"
             width={370}
             height={230}
             alt=""
@@ -44,16 +44,16 @@ export function ManagementCourseCard({ course }: CourseProps) {
           {course.discount_price ? (
             <>
               <div className="text-lg font-thin text-gray-500 line-through">
-                {formatCurrency(course.price)} ₫
+                {formatCurrency(course.price)} $
               </div>
               <div className="text-lg font-semibold text-red-600">
-                {formatCurrency(course.discount_price)} ₫
+                {formatCurrency(course.discount_price)} $
               </div>
             </>
           ) : (
             <>
               <div className="text-lg font-semibold text-primary ">
-                {formatCurrency(course.price)} ₫
+                {formatCurrency(course.price)} $
               </div>
             </>
           )}

@@ -14,11 +14,13 @@ import { Button } from '../ui/button'
 
 export type LessonItem = Lesson & {
   checked: boolean
+  isNew: boolean
 }
 
 interface SortableListItemProps {
   item: LessonItem
   order: number
+  selected: boolean
   onCompleteItem: (id: number) => void
   onRemoveItem: (id: number) => void
   onSelectItem?: (id: number) => void
@@ -30,6 +32,7 @@ interface SortableListItemProps {
 function SortableLessonListItem({
   item,
   order,
+  selected,
   onCompleteItem,
   onRemoveItem,
   renderExtra,
@@ -54,7 +57,7 @@ function SortableLessonListItem({
   return (
     // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
     <div
-      className="flex w-full items-center"
+      className="flex w-full items-center cursor-pointer"
       onClick={() => {
         if (onSelectItem) onSelectItem(item.id)
       }}
@@ -65,6 +68,7 @@ function SortableLessonListItem({
           'relative z-auto grow',
           'h-full rounded-xl bg-white',
           'border',
+          selected && 'bg-primary/10',
           item.checked ? 'cursor-not-allowed' : '',
           item.checked && !isDragging ? 'w-7/10' : 'w-full',
         )}
@@ -96,9 +100,7 @@ function SortableLessonListItem({
               <span className="text-md">{order + 1}.</span>
               {item.checked ? 'Delete' : ` ${item.title}`}
             </h3>
-            <Button size="icon" className="ml-auto mr-2 rounded-full">
-              <Pencil size="15" />
-            </Button>
+
             {/* {renderExtra && renderExtra(item)} */}
           </div>
         </div>
@@ -112,11 +114,13 @@ SortableLessonListItem.displayName = 'SortableLessonListItem'
 
 interface SortableListProps {
   items: LessonItem[]
+  editingItem: LessonItem | null
   setItems: Dispatch<SetStateAction<LessonItem[]>>
   onCompleteItem: (id: number) => void
   onSelectItem: (id: number) => void
   renderItem: (
     item: LessonItem,
+    editingItem: LessonItem | null,
     order: number,
     onCompleteItem: (id: number) => void,
     onRemoveItem: (id: number) => void,
@@ -126,6 +130,7 @@ interface SortableListProps {
 
 function SortableLessonList({
   items,
+  editingItem,
   setItems,
   onCompleteItem,
   onSelectItem,
@@ -145,6 +150,7 @@ function SortableLessonList({
               {items?.map((item, index) =>
                 renderItem(
                   item,
+                  editingItem,
                   index,
                   onCompleteItem,
                   (id: number) => setItems((items) => items.filter((item) => item.id !== id)),

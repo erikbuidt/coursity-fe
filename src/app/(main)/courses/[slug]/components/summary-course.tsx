@@ -25,6 +25,22 @@ function SummaryCourse({ course }: Props) {
       setIsRegister(true)
     }
   }
+  const renderPrice = () => {
+    return course.discount_price ? (
+      <>
+        <div className="text-2xl font-semibold text-red-600">
+          {formatCurrency(course.discount_price)}₫
+        </div>
+        <div className="text-md font-semibold text-gray-500 line-through">
+          {formatCurrency(course.price)} ₫
+        </div>
+      </>
+    ) : (
+      <>
+        <div className="text-lg font-semibold text-primary">{formatCurrency(course.price)} ₫</div>
+      </>
+    )
+  }
   return (
     <Card className="py-0 gap-0 overflow-hidden relative top-[-220px]">
       <HeroVideoDialog
@@ -35,24 +51,8 @@ function SummaryCourse({ course }: Props) {
         thumbnailAlt="Hero Video"
       />
       <CardContent className="py-6">
-        {course.discount_price ? (
-          <>
-            <div className="text-2xl font-semibold text-red-600">
-              {formatCurrency(course.discount_price)}₫
-            </div>
-            <div className="text-md font-semibold text-gray-500 line-through">
-              {formatCurrency(course.price)} ₫
-            </div>
-          </>
-        ) : (
-          <>
-            <div className="text-lg font-semibold text-primary">
-              {formatCurrency(course.price)} ₫
-            </div>
-          </>
-        )}
-
         <ul>
+          {!course.is_enrolled && !isRegister && renderPrice()}
           <div className="font-bold text-xl mb-3">This course includes:</div>
           <li className="flex items-center">
             <MonitorPlay className="mr-2" /> {formatDuration(course.duration)}

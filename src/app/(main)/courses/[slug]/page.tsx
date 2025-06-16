@@ -73,7 +73,7 @@ async function CourseDetail(props: {
           <div className="border-2 border-gray-200">
             <h3 className="font-bold text-2xl pl-4 pt-4">What you'll learn</h3>
             <ul className="flex flex-wrap p-4 font-semibold text-gray-600 text-sm">
-              {course.will_learns.map((item, index) => (
+              {course.will_learns?.map((item, index) => (
                 <li key={index} className="flex items-center mt-2 w-[50%] ">
                   <Check className="mr-2 text-primary" />
                   {item}
@@ -83,7 +83,7 @@ async function CourseDetail(props: {
           </div>
           <h3 className="font-bold text-2xl pt-4">Requirements</h3>
           <ul className="flex flex-col font-semibold text-gray-600 text-sm">
-            {course.requirements.map((item, index) => (
+            {course.requirements?.map((item, index) => (
               <li key={index} className="flex items-center mt-2">
                 <Check className="mr-2 text-primary" /> {item}
               </li>

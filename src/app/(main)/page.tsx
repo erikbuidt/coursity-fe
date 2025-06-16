@@ -1,9 +1,14 @@
-'use client'
+'use server'
+import CarouselAutoPlay from '@/components/custom/carousel-auto-play'
 import { CourseCard } from '@/components/custom/course-card'
 import FadeInStaggered from '@/components/custom/fade-in'
+// import { CourseCard } from '@/components/custom/course-card'
+// import FadeInStaggered from '@/components/custom/fade-in'
 import { NumberTicker } from '@/components/magicui/number-ticker'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
+// import { Button } from '@/components/ui/button'
+// import { Card, CardContent } from '@/components/ui/card'
 import {
   Carousel,
   CarouselContent,
@@ -11,7 +16,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel'
-import { mockCourses } from '@/mocks/course'
+import { courseApi } from '@/services/courseService'
 import Autoplay from 'embla-carousel-autoplay'
 import Link from 'next/link'
 const categories = [
@@ -71,7 +76,11 @@ const categories = [
   },
 ]
 
-export default function Home() {
+export default async function Home() {
+  const { items: courses } = await courseApi.getCourses({
+    page: 1,
+    limit: 10,
+  })
   return (
     <>
       <div className="bg-[url(/images/home1-bg.png)] bg-no-repeat bg-cover bg-center] ">
@@ -89,7 +98,6 @@ export default function Home() {
               </p>
             </FadeInStaggered>
 
-            {/* Buttons */}
             <div className="mt-8 flex justify-start gap-3">
               <FadeInStaggered direction="fade-right" className="">
                 <Button size={'lg'} className="p-6">
@@ -148,47 +156,13 @@ export default function Home() {
       </div>
       <section className="container md:max-w-5xl lg:max-w-6xl xl:max-w-7xl">
         <h2 className="text-2xl font-bold text-center">Top Categories</h2>
-        <Carousel
-          className="w-full mt-8"
-          opts={{
-            align: 'start',
-          }}
-          plugins={[
-            Autoplay({
-              delay: 2000,
-            }),
-          ]}
-        >
-          <CarouselContent>
-            {categories.map((category, index) => (
-              <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/6">
-                <div className="p-3">
-                  <Card className="group bg-gray-100 border-0 shadow-none hover:bg-indigo-950">
-                    <div className=" rounded-full w-20 h-20 bg-white mx-auto flex items-center justify-center mb-4">
-                      asd
-                    </div>
-                    <CardContent className="">
-                      <h3 className="font-bold text-center h-10 group group-hover:text-white">
-                        {category.name}
-                      </h3>
-                      <div className="mx-auto mt-1 text-center text-xs text-gray-500 group-hover:text-white">
-                        1 Course
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          <CarouselPrevious />
-          <CarouselNext />
-        </Carousel>
+        <CarouselAutoPlay items={categories} />
       </section>
 
       <section className="container mt-20 md:max-w-5xl lg:max-w-6xl xl:max-w-7xl">
         <h2 className="text-2xl font-bold text-center mt-8">Most Popular Courses</h2>
         <FadeInStaggered className="grid grid-cols-4 gap-4 mt-10">
-          {mockCourses.map((course, i) => (
+          {courses.map((course, i) => (
             <CourseCard key={course.id} course={course} />
           ))}
         </FadeInStaggered>

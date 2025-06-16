@@ -1,4 +1,4 @@
-// 'use client'
+'use server'
 import { CourseCard } from '@/components/custom/course-card'
 import {
   Carousel,
@@ -102,11 +102,7 @@ async function Courses(props: {
             <CourseCard key={course.id} course={course} />
           ))}
         </FadeInStaggered>
-        {/* <div className="grid grid-cols-4 gap-4 mt-8">
-       {Array.from({ length: 10 }).map((_, i) => (
-         <CourseCard key={i} title="test" description="sssss" imageSrc="/images/course-1.jpg" />
-       ))}
-     </div> */}
+
         <div className="mt-4">
           <Pagination pageSize={meta.total_pages} queryConfig={{ page: meta.current_page }} />
         </div>
