@@ -5,7 +5,7 @@ import { courseApi } from '@/services/courseService'
 import { useAuth } from '@clerk/nextjs'
 import { useQuery } from '@tanstack/react-query'
 import { Plus } from 'lucide-react'
-import { useState } from 'react'
+import { Suspense, useState } from 'react'
 import { CreateCourseDialog } from './_components/create-course-dialog'
 import { ManagementCourseCard } from '@/components/custom/management-course-card'
 import Pagination from '@/components/custom/pagination'
@@ -60,5 +60,10 @@ function Course() {
     </div>
   )
 }
-
-export default Course
+export default function CoursePage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <Course />
+    </Suspense>
+  )
+}

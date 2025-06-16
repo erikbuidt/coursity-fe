@@ -1,15 +1,19 @@
+import { cn } from '@/lib/utils'
 import type { ButtonHTMLAttributes, ReactNode } from 'react'
 interface LoadingButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   fallback: string
   isLoading: boolean
 }
 
-function LoadingButton({ fallback, isLoading, children, ...props }: LoadingButtonProps) {
+function LoadingButton({ fallback, isLoading, children, className, ...props }: LoadingButtonProps) {
   return (
     <>
       <button
         disabled={isLoading || props.disabled}
-        className="text-white bg-primary hover:bg-primary/90 focus:ring-4 cursor-pointer focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center  dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 inline-flex items-center"
+        className={cn(
+          'text-white bg-primary hover:bg-primary/90 focus:ring-4 cursor-pointer focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center  dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 inline-flex items-center',
+          className,
+        )}
         {...props}
       >
         {isLoading && (
@@ -30,7 +34,7 @@ function LoadingButton({ fallback, isLoading, children, ...props }: LoadingButto
             />
           </svg>
         )}
-        {!isLoading ? children : fallback || 'Loading...'}
+        {!isLoading ? children : fallback || '...'}
       </button>
     </>
   )

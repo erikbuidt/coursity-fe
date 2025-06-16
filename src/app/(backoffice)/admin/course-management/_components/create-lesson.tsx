@@ -17,6 +17,9 @@ import { Lesson } from '@/types/course.type'
 import { lessonApi } from '@/services/lessonService'
 import { useAuth } from '@clerk/nextjs'
 import { toast } from 'sonner'
+import LoadingButton from '@/components/ui/loading-button'
+import Image from 'next/image'
+import { useEffect, useState } from 'react'
 
 type FormData = {
   title: string
@@ -75,25 +78,33 @@ function CreateLesson({ chapter_id }: { chapter_id: number }) {
     },
     resolver: zodResolver(createLessonSchema),
   })
+  const [ytbThumbnail, setYtbThumbnail] = useState<string>('')
   const video_provider = watch('video_provider')
+  const video_url = watch('video_url')
   const { mutateAsync: createLesson, isPending: isPendingCreateLesson } = useMutation({
     mutationFn: async (arg: {
       payload: FormData & { chapter_id: number }
     }) => {
       const { payload } = arg
-      console.log({ payload })
 
       const token = await getToken()
       return lessonApi.createLesson(payload, token || '')
     },
     onSuccess: () => {
       toast.success('Lessons have been update successfully', {})
+      reset({
+        title: '',
+        video_provider: 'system',
+        video_url: '',
+        video_file: null,
+      })
       queryClient.invalidateQueries({ queryKey: ['course'] })
     },
     onError: () => {
       toast.error('Something went wrong', {})
     },
   })
+
   const onSubmit = (data: FormData) => {
     createLesson({
       payload: {
@@ -102,6 +113,14 @@ function CreateLesson({ chapter_id }: { chapter_id: number }) {
       },
     })
   }
+  useEffect(() => {
+    if (video_url?.startsWith('https://www.youtube.com/watch?v') && video_provider === 'youtube') {
+      const videoId = video_url.split('v=')[1]
+      setYtbThumbnail(`https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`)
+    } else {
+      setYtbThumbnail('')
+    }
+  }, [video_url, video_provider])
   return (
     <div className="min-h-[370px] flex flex-col">
       <h4 className="font-bold">Create Lesson</h4>
@@ -163,10 +182,17 @@ function CreateLesson({ chapter_id }: { chapter_id: number }) {
               control={control}
               render={({ field }) => <Input {...field} error={errors.video_url?.message} />}
             />
+            {ytbThumbnail && <Image width={200} height={300} src={ytbThumbnail} alt="" />}
           </div>
         )}
         <div className="mt-auto flex">
-          <Button className="w-fit bg-primary ml-auto">Add</Button>
+          <LoadingButton
+            isLoading={isPendingCreateLesson}
+            className="ml-auto"
+            fallback={'Creating...'}
+          >
+            Create
+          </LoadingButton>
         </div>
       </form>
     </div>

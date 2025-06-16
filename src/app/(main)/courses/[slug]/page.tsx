@@ -94,7 +94,7 @@ async function CourseDetail(props: {
             <Fragment key={chapter.id}>
               <Collapse title={chapter.title}>
                 <ul className="flex flex-col">
-                  {chapter.lessons.map((lesson) => (
+                  {chapter.lessons?.map((lesson) => (
                     <li
                       key={lesson.id}
                       className="flex gap-4 items-center px-4 py-2 hover:bg-accent"

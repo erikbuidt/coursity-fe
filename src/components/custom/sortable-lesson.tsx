@@ -1,16 +1,10 @@
 'use client'
 
-import { ChevronDown, GripVertical, Pen, Pencil } from 'lucide-react'
-import { AnimatePresence, LayoutGroup, Reorder, motion, useDragControls } from 'motion/react'
-// npx shadcn-ui@latest add checkbox
-// npm  i react-use-measure
+import { GripVertical } from 'lucide-react'
+import { AnimatePresence, LayoutGroup, Reorder, useDragControls } from 'motion/react'
 import { type Dispatch, type ReactNode, type SetStateAction, useState } from 'react'
-import useMeasure from 'react-use-measure'
-
 import { cn } from '@/lib/utils'
 import type { Lesson } from '@/types/course.type'
-import { CollapsibleTrigger } from '@radix-ui/react-collapsible'
-import { Button } from '../ui/button'
 
 export type LessonItem = Lesson & {
   checked: boolean
@@ -21,10 +15,7 @@ interface SortableListItemProps {
   item: LessonItem
   order: number
   selected: boolean
-  onCompleteItem: (id: number) => void
-  onRemoveItem: (id: number) => void
   onSelectItem?: (id: number) => void
-  renderExtra?: (item: LessonItem) => React.ReactNode
   className?: string
   handleDrag: () => void
 }
@@ -33,14 +24,9 @@ function SortableLessonListItem({
   item,
   order,
   selected,
-  onCompleteItem,
-  onRemoveItem,
-  renderExtra,
   handleDrag,
   onSelectItem,
-  className,
 }: SortableListItemProps) {
-  const [ref, bounds] = useMeasure()
   const [isDragging, setIsDragging] = useState(false)
   const dragControls = useDragControls()
 
@@ -66,7 +52,7 @@ function SortableLessonListItem({
         value={item}
         className={cn(
           'relative z-auto grow',
-          'h-full rounded-xl bg-white',
+          'h-full rounded-lg bg-white',
           'border',
           selected && 'bg-primary/10',
           item.checked ? 'cursor-not-allowed' : '',
@@ -82,8 +68,17 @@ function SortableLessonListItem({
         }}
         whileDrag={{ zIndex: 9999 }}
       >
-        <div ref={ref} className={cn('z-20 ')}>
-          <div className="flex items-center py-1 ">
+        <div className={cn('z-20 ')}>
+          <div className="flex items-center justify-between ">
+            <h3
+              className={cn(
+                'tracking-tighter text-left text-md pl-3',
+                item.checked ? 'text-red-400' : 'text-black',
+              )}
+            >
+              <span className="text-md">{order + 1}.</span>
+              {item.checked ? 'Delete' : ` ${item.title}`}
+            </h3>
             <div
               className="cursor-grab p-2"
               onPointerDown={handleDragStart}
@@ -91,16 +86,6 @@ function SortableLessonListItem({
             >
               <GripVertical />
             </div>
-            <h3
-              className={cn(
-                'tracking-tighter text-left text-md',
-                item.checked ? 'text-red-400' : 'text-black',
-              )}
-            >
-              <span className="text-md">{order + 1}.</span>
-              {item.checked ? 'Delete' : ` ${item.title}`}
-            </h3>
-
             {/* {renderExtra && renderExtra(item)} */}
           </div>
         </div>
@@ -114,6 +99,7 @@ SortableLessonListItem.displayName = 'SortableLessonListItem'
 
 interface SortableListProps {
   items: LessonItem[]
+  onReorder: (newItems: LessonItem[]) => void
   editingItem: LessonItem | null
   setItems: Dispatch<SetStateAction<LessonItem[]>>
   onCompleteItem: (id: number) => void
@@ -130,12 +116,19 @@ interface SortableListProps {
 
 function SortableLessonList({
   items,
+  onReorder,
   editingItem,
   setItems,
   onCompleteItem,
   onSelectItem,
   renderItem,
 }: SortableListProps) {
+  const handleReorder = (newItems: LessonItem[]) => {
+    setItems(newItems)
+    if (onReorder) {
+      onReorder(newItems)
+    }
+  }
   if (items) {
     return (
       <>
@@ -143,7 +136,7 @@ function SortableLessonList({
           <Reorder.Group
             axis="y"
             values={items}
-            onReorder={setItems}
+            onReorder={handleReorder}
             className="flex flex-col gap-2"
           >
             <AnimatePresence>

@@ -37,12 +37,9 @@ interface SortableListItemProps {
 function SortableChapterListItem({
   item,
   order,
-  onCompleteItem,
   onUpdateItem,
   onCreateItem,
   onCancelUpdateItem,
-  onRemoveItem,
-  renderExtra,
   onEdit,
   handleDrag,
   isExpanded,
@@ -123,14 +120,118 @@ function SortableChapterListItem({
           whileDrag={{ zIndex: 9999 }}
         >
           <div ref={ref} className={cn(isExpanded ? '' : '', 'z-20 ')}>
-            <Collapsible className="group/collapsible items-center px-2 py-2">
-              <div className="flex items-center ">
+            <Collapsible className="group/collapsible items-center px-2 py-1">
+              <div className="flex items-center gap-2">
+                {!editingId && !item.isNew && (
+                  <CollapsibleTrigger className="">
+                    <ChevronDown
+                      size={20}
+                      className="ml-aut transition-transform group-data-[state=open]/collapsible:rotate-180"
+                    />
+                  </CollapsibleTrigger>
+                )}
+
+                <motion.div layout="position" className="flex items-center justify-start w-full">
+                  <AnimatePresence>
+                    {!isExpanded ? (
+                      <motion.div
+                        initial={{ opacity: 0, filter: 'blur(4px)' }}
+                        animate={{ opacity: 1, filter: 'blur(0px)' }}
+                        exit={{ opacity: 0, filter: 'blur(4px)' }}
+                        transition={{ duration: 0.001 }}
+                        className="flex items-center space-x-2  w-full"
+                      >
+                        <motion.div
+                          key={`${item.checked}`}
+                          className="w-full"
+                          initial={{
+                            opacity: 0,
+                            filter: 'blur(4px)',
+                          }}
+                          animate={{ opacity: 1, filter: 'blur(0px)' }}
+                          transition={{
+                            bounce: 0.2,
+                            delay: item.checked ? 0.2 : 0,
+                            type: 'spring',
+                          }}
+                        >
+                          {editingId || item.isNew ? (
+                            <div>
+                              <div className="flex items-center justify-start gap-1">
+                                {item.isNew && (
+                                  <Label className="text-xs min-w-20">New chapter</Label>
+                                )}
+                                {}
+                                <Input
+                                  value={inputValue}
+                                  onChange={(e) => setInputValue(e.target.value)}
+                                />
+                              </div>
+
+                              <div className="flex justify-end gap-2 mt-2">
+                                {/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
+                                <Button onClick={cancelEdit} variant="outline">
+                                  Cancel
+                                </Button>
+                                <Button
+                                  className="cursor-pointer"
+                                  onClick={(e: any) => {
+                                    e.preventDefault()
+                                    if (onUpdateItem && !item.isNew && editingId) {
+                                      onUpdateItem(editingId, inputValue)
+                                      setEditingId(null)
+                                    }
+                                    if (onCreateItem && item.isNew) onCreateItem(item)
+                                    setInputValue('')
+                                  }}
+                                  // disabled={!editingText.trim()}
+                                >
+                                  {item.isNew && 'Create'}
+                                  {editingId && 'Save'}
+                                </Button>
+                              </div>
+                            </div>
+                          ) : (
+                            <>
+                              <h4
+                                className={cn(
+                                  'tracking-tighter text-left md:text-lg flex items-center gap-2 ',
+                                  item.checked ? 'text-red-400' : 'text-black',
+                                )}
+                              >
+                                <span className="text-md">{order + 1}.</span>
+                                {item.checked ? 'Delete' : ` ${item.title}`}
+                                {/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
+                                <div
+                                  className="cursor-pointer"
+                                  onClick={(e: any) => {
+                                    e.preventDefault()
+                                    setEditingId(item.id)
+                                    setInputValue(item.title)
+                                  }}
+                                >
+                                  <Button variant="link" className="cursor-pointer !p-0">
+                                    <Edit3 />
+                                  </Button>
+                                </div>
+                              </h4>
+                              <div className="text-gray-500 text-left mt-[-5px]">
+                                {item.lessons?.length} lessons
+                              </div>
+                            </>
+                          )}
+                        </motion.div>
+                      </motion.div>
+                    ) : null}
+                  </AnimatePresence>
+                  {/* {renderExtra && renderExtra(item)} */}
+                </motion.div>
                 {editingId || item.isNew ? (
                   <></>
                 ) : (
                   <>
                     <div
-                      className="cursor-grab p-2"
+                      className="cursor-grab p-1"
                       onPointerDown={handleDragStart}
                       style={{ touchAction: 'none' }}
                     >
@@ -138,108 +239,6 @@ function SortableChapterListItem({
                     </div>
                   </>
                 )}
-                <CollapsibleTrigger className="w-full">
-                  <motion.div layout="position" className="flex items-center justify-start w-full">
-                    <AnimatePresence>
-                      {!isExpanded ? (
-                        <motion.div
-                          initial={{ opacity: 0, filter: 'blur(4px)' }}
-                          animate={{ opacity: 1, filter: 'blur(0px)' }}
-                          exit={{ opacity: 0, filter: 'blur(4px)' }}
-                          transition={{ duration: 0.001 }}
-                          className="flex items-center space-x-2  w-full"
-                        >
-                          <motion.div
-                            key={`${item.checked}`}
-                            className=" px-1 w-full"
-                            initial={{
-                              opacity: 0,
-                              filter: 'blur(4px)',
-                            }}
-                            animate={{ opacity: 1, filter: 'blur(0px)' }}
-                            transition={{
-                              bounce: 0.2,
-                              delay: item.checked ? 0.2 : 0,
-                              type: 'spring',
-                            }}
-                          >
-                            {editingId || item.isNew ? (
-                              <div>
-                                <div className="flex items-center justify-start gap-1">
-                                  {item.isNew && (
-                                    <Label className="text-xs min-w-20">New chapter</Label>
-                                  )}
-                                  {}
-                                  <Input
-                                    value={inputValue}
-                                    onChange={(e) => setInputValue(e.target.value)}
-                                  />
-                                </div>
-
-                                <div className="flex justify-end gap-2 mt-2">
-                                  {/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
-                                  <Button onClick={cancelEdit} variant="outline">
-                                    Cancel
-                                  </Button>
-                                  <Button
-                                    className="cursor-pointer"
-                                    onClick={(e: any) => {
-                                      e.preventDefault()
-                                      if (onUpdateItem && !item.isNew && editingId) {
-                                        onUpdateItem(editingId, inputValue)
-                                        setEditingId(null)
-                                      }
-                                      if (onCreateItem && item.isNew) onCreateItem(item)
-                                      setInputValue('')
-                                    }}
-                                    // disabled={!editingText.trim()}
-                                  >
-                                    {item.isNew && 'Create'}
-                                    {editingId && 'Save'}
-                                  </Button>
-                                </div>
-                              </div>
-                            ) : (
-                              <>
-                                <h4
-                                  className={cn(
-                                    'tracking-tighter text-left md:text-lg flex items-center gap-2 ',
-                                    item.checked ? 'text-red-400' : 'text-black',
-                                  )}
-                                >
-                                  <span className="text-md">{order + 1}.</span>
-                                  {item.checked ? 'Delete' : ` ${item.title}`}
-                                  {/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
-                                  <div
-                                    className="cursor-pointer"
-                                    onClick={(e: any) => {
-                                      e.preventDefault()
-                                      setEditingId(item.id)
-                                      setInputValue(item.title)
-                                    }}
-                                  >
-                                    <Edit3 className="h-4 w-4" />
-                                  </div>
-                                </h4>
-                                <div className="text-gray-500 text-left">
-                                  {item.lessons?.length} lessons
-                                </div>
-                              </>
-                            )}
-                          </motion.div>
-                          {/* <div
-                            onPointerDown={handleDragStart}
-                            style={{ touchAction: 'none' }}
-                            className="ml-auto"
-                          >
-                            <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180" />
-                          </div> */}
-                        </motion.div>
-                      ) : null}
-                    </AnimatePresence>
-                    {/* {renderExtra && renderExtra(item)} */}
-                  </motion.div>
-                </CollapsibleTrigger>
                 {!item.isNew && !editingId && (
                   <Button
                     size="icon"
