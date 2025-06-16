@@ -3,6 +3,7 @@ import Forbidden from '@/components/custom/403'
 import InternalServerError from '@/components/custom/500'
 import CircleProgress from '@/components/custom/circle-progress-bar'
 import Collapse from '@/components/custom/collapse'
+import YouTubePlayer from '@/components/custom/youtube-player'
 
 import { Checkbox } from '@/components/ui/checkbox'
 import { HttpError } from '@/lib/http'
@@ -109,7 +110,7 @@ function Learn() {
       if (lessonId) {
         const curr = course.chapters
           .flatMap((chapter) => chapter.lessons)
-          .find((lesson) => lesson.id === +lessonId)
+          .find((lesson) => lesson?.id === +lessonId)
 
         curr && setCurrentLesson(curr)
       }
@@ -147,18 +148,26 @@ function Learn() {
         <div className="">
           <div className="w-[70%] h-full fixed left-0 top-0 mt-12 overflow-auto">
             <div className="w-full px-[30px] bg-black">
-              <Player
-                src={currentLesson?.video_url || ''}
-                onEnded={() => {
-                  currentLesson &&
-                    localCourse &&
-                    completeLessonMutation.mutate({
-                      chapterId: currentLesson.chapter_id,
-                      lessonId: currentLesson.id,
-                      courseId: localCourse.id,
-                    })
-                }}
-              />
+              {currentLesson?.video_provider === 'youtube' ? (
+                <div className=" py-4 w-[640px] h-[460px] xl:w-[1040px] xl:h-[750px] mx-auto">
+                  <YouTubePlayer videoUrl={currentLesson.video_url} />
+                </div>
+              ) : currentLesson?.video_provider === 'system' ? (
+                <Player
+                  src={currentLesson?.video_url || ''}
+                  onEnded={() => {
+                    currentLesson &&
+                      localCourse &&
+                      completeLessonMutation.mutate({
+                        chapterId: currentLesson.chapter_id,
+                        lessonId: currentLesson.id,
+                        courseId: localCourse.id,
+                      })
+                  }}
+                />
+              ) : (
+                <></>
+              )}
             </div>
             <div className="lg:max-w-[798px] xl:max-w-[1310] items-center mx-auto">
               <div>{currentLesson?.title}</div>
@@ -174,7 +183,7 @@ function Learn() {
                 <Collapse
                   defaultOpen={
                     // biome-ignore lint/complexity/noUselessTernary: <explanation>
-                    chapter.lessons.find((l) => l.id === currentLesson?.id) ? true : false
+                    chapter.lessons?.find((l) => l.id === currentLesson?.id) ? true : false
                   }
                   key={chapter.id}
                   title={chapter.title}
@@ -186,7 +195,7 @@ function Learn() {
                   }
                 >
                   <ul className="flex flex-col">
-                    {chapter.lessons.map((lesson) => (
+                    {chapter.lessons?.map((lesson) => (
                       <li
                         key={lesson.id}
                         className={cn('flex gap-3 hover:bg-accent px-4 py-2', {

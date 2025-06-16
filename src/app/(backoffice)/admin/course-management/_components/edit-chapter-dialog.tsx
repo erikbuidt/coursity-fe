@@ -1,39 +1,23 @@
 'use client'
 import {
-  LessonItem,
+  type LessonItem,
   SortableLessonList,
   SortableLessonListItem,
 } from '@/components/custom/sortable-lesson'
 import { Button } from '@/components/ui/button'
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Separator } from '@/components/ui/separator'
 import type { Chapter, Lesson } from '@/types/course.type'
 
+import LoadingButton from '@/components/ui/loading-button'
+import { lessonApi } from '@/services/lessonService'
+import { useAuth } from '@clerk/nextjs'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { Plus } from 'lucide-react'
 import { useCallback, useEffect, useState } from 'react'
+import { toast } from 'sonner'
 import CreateLesson from './create-lesson'
 import EditLesson from './edit-lesson'
-import { Plus } from 'lucide-react'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { toast } from 'sonner'
-import { useAuth } from '@clerk/nextjs'
-import { lessonApi } from '@/services/lessonService'
-import LoadingButton from '@/components/ui/loading-button'
 
 export function EditChapterDialog({
   open = false,
@@ -49,6 +33,7 @@ export function EditChapterDialog({
   const [editingLesson, setEditingLesson] = useState<LessonItem | null>(null)
   const [originalLessons, setOriginalLessons] = useState<LessonItem[]>([])
   const { getToken } = useAuth()
+  const [isChangeOrder, setIsChangeOrder] = useState<boolean>(false)
   const { mutateAsync: updateLessonPositions, isPending: isPendingUpsertLesson } = useMutation({
     mutationFn: async (arg: {
       payload: { lessons: Partial<Lesson>[] }
@@ -72,36 +57,23 @@ export function EditChapterDialog({
     )
   }, [])
 
-  const handleRemoveItem = useCallback((id: number) => {
-    setItems((prevItems) => prevItems.filter((item) => item.id !== id))
-  }, [])
-
   const handleSelectItem = (id: number) => {
     if (chapterEditing) setEditingLesson(items.find((l) => l.id === id) || null)
   }
   const handleSaveLessons = () => {
     if (!chapterEditing) return
-
     // Find updated lessons (title or position changed)
     const updatedLessons = items.filter((item, idx) => {
       const orig = originalLessons.find((o) => o.id === item.id)
-      return orig && (orig.title !== item.title || orig.position !== idx + 1)
+      return orig && orig.position !== idx + 1
     })
-
-    // Find deleted lessons (in original but not in items)
-    const deletedLessons = originalLessons.filter(
-      (orig) => !items.some((item) => item.id === orig.id),
-    )
 
     // Prepare payload
     const changedLessons = [
-      ...updatedLessons.map((item, idx) => ({
+      ...updatedLessons.map((item, _) => ({
+        ...item,
         id: item.id,
         position: items.findIndex((i) => i.id === item.id) + 1,
-      })),
-      ...deletedLessons.map((item) => ({
-        id: item.id,
-        is_deleted: true,
       })),
     ]
 
@@ -114,22 +86,44 @@ export function EditChapterDialog({
       },
     })
   }
+
+  const handleReorder = (newItems: LessonItem[]) => {
+    const updatedLessons = newItems.filter((item, idx) => {
+      const orig = originalLessons.find((o) => o.id === item.id)
+      return orig && orig.position !== idx + 1
+    })
+    if (updatedLessons.length > 0) setIsChangeOrder(true)
+    else setIsChangeOrder(false)
+  }
+  const handleDeleteLessonId = (lessonId: number) => {
+    let newItems = items.filter((item) => item.id !== lessonId)
+    newItems = newItems.map((item, index) => ({
+      ...item,
+      position: index + 1, // Update position based on new index
+    }))
+    console.log({ newItems, originalLessons })
+    const updatedLessons = newItems.filter((item, idx) => {
+      const orig = originalLessons.find((o) => o.id === item.id)
+      return orig && orig.position !== idx + 1
+    })
+    if (updatedLessons.length > 0)
+      updateLessonPositions({
+        payload: {
+          lessons: updatedLessons,
+        },
+      })
+  }
   const renderItem = useCallback(
     (
       item: LessonItem,
       editingItem: LessonItem | null,
       index: number,
-      onCompleteItem: (id: number) => void,
-      onRemoveItem: (id: number) => void,
       onSelectItem: (id: number) => void,
     ) => (
       <SortableLessonListItem
         key={item.id}
         item={item}
         onSelectItem={onSelectItem}
-        onCompleteItem={onCompleteItem}
-        onRemoveItem={onRemoveItem}
-        handleDrag={() => {}}
         order={index}
         selected={item.id === editingItem?.id}
       />
@@ -139,8 +133,6 @@ export function EditChapterDialog({
 
   useEffect(() => {
     if (chapterEditing) {
-      console.log('rerender')
-
       const sortedLessons = chapterEditing.lessons
         ?.sort((a, b) => a.position - b.position)
         .map((c) => ({
@@ -169,6 +161,7 @@ export function EditChapterDialog({
               <div className="col-span-3 flex flex-col gap-2 p-4 bg-accent">
                 <SortableLessonList
                   items={items}
+                  onReorder={handleReorder}
                   setItems={setItems}
                   onCompleteItem={handleCompleteItem}
                   onSelectItem={handleSelectItem}
@@ -176,26 +169,33 @@ export function EditChapterDialog({
                   editingItem={editingLesson}
                 />
                 <Button
+                  type="button"
                   variant="outline"
                   onClick={() => setEditingLesson(null)}
-                  className="bg-transparent text-primary"
+                  className="text-primary border-primary hover:text-primary cursor-pointer"
                 >
                   Add lesson
                   <Plus />
                 </Button>
-                <div className="mt-auto text-right">
-                  <LoadingButton
-                    isLoading={isPendingUpsertLesson}
-                    onClick={handleSaveLessons}
-                    fallback={'Saving...'}
-                  >
-                    Save
-                  </LoadingButton>
-                </div>
+                {isChangeOrder && (
+                  <div className="mt-auto text-right">
+                    <LoadingButton
+                      isLoading={isPendingUpsertLesson}
+                      onClick={handleSaveLessons}
+                      fallback={'Saving...'}
+                    >
+                      Save
+                    </LoadingButton>
+                  </div>
+                )}
               </div>
               <div className="col-span-9 flex flex-col gap-2 border-l p-4">
                 {editingLesson ? (
-                  <EditLesson editingLesson={editingLesson} />
+                  <EditLesson
+                    editingLesson={editingLesson}
+                    setEditingLesson={setEditingLesson}
+                    onDeleteLesson={handleDeleteLessonId}
+                  />
                 ) : (
                   chapterEditing && <CreateLesson chapter_id={chapterEditing.id} />
                 )}

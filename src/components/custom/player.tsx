@@ -8,6 +8,7 @@ export default function Player({ src, onEnded }: { src: string; onEnded?: () => 
   const videoRef = useRef<HTMLVideoElement | null>(null)
   const plyrInstance = useRef<Plyr | null>(null)
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (!src || !containerRef.current) return
 

@@ -29,15 +29,15 @@ function SummaryCourse({ course }: Props) {
     return course.discount_price ? (
       <>
         <div className="text-2xl font-semibold text-red-600">
-          {formatCurrency(course.discount_price)}₫
+          {formatCurrency(course.discount_price)} $
         </div>
         <div className="text-md font-semibold text-gray-500 line-through">
-          {formatCurrency(course.price)} ₫
+          {formatCurrency(course.price)} $
         </div>
       </>
     ) : (
       <>
-        <div className="text-lg font-semibold text-primary">{formatCurrency(course.price)} ₫</div>
+        <div className="text-lg font-semibold text-primary">{formatCurrency(course.price)} $</div>
       </>
     )
   }

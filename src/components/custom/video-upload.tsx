@@ -23,6 +23,15 @@ export const VideoUpload = (
     return () => URL.revokeObjectURL(objectUrl)
   }, [selectedFile])
 
+  useEffect(() => {
+    if (!field.value) {
+      setSelectedFile(undefined)
+      if (inputRef.current) {
+        inputRef.current.value = ''
+      }
+    }
+  }, [field.value])
+
   const onSelectFile = (e: any) => {
     if (!e.target.files || e.target.files.length === 0) {
       setSelectedFile(undefined)

@@ -7,7 +7,7 @@ export type Course = {
   title: string
   description: string
   image_url: string
-  price: number
+  price: number | string
   discount_price: number
   duration: number
   will_learns: string[]

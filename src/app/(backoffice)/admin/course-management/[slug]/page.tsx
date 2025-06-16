@@ -36,9 +36,9 @@ import { zodResolver } from '@hookform/resolvers/zod'
 type FormData = {
   title: string
   description: string
-  thumbnail: File | null | undefined
-  price: number
-  category: string
+  thumbnail?: File | null | undefined
+  price: number | string
+  category?: string
   will_learns: Task[]
   requirements: Task[]
   image_url: string
@@ -56,16 +56,17 @@ const updateCourseSchema: ZodType<FormData> = z.object({
       required_error: 'Description is required',
     })
     .nonempty(),
-  price: z.string({
-    required_error: 'Price is required',
-  }),
+  price: z
+    .union([z.string(), z.number()])
+    .transform((value) => (typeof value === 'string' ? Number.parseFloat(value) : value))
+    .refine((value) => !Number.isNaN(value), { message: 'Price must be a valid number' }),
   thumbnail: z
     .any({
       required_error: 'Thumbnail is required',
     })
+    .optional()
     .refine(
       (file) => {
-        console.log({ file })
         return file instanceof File || file === null || file === undefined
       },
       {
@@ -100,9 +101,6 @@ function EditCourse() {
   const { slug } = useParams()
   const [items, setItems] = useState<ChapterItem[]>([])
   const [originalChapters, setOriginalChapters] = useState<ChapterItem[]>([])
-  const [title, setTitle] = useState('')
-  const [description, setDescription] = useState('')
-  const [chapterEditingText, setChapterEditingText] = useState<string | null>(null)
   const [chapterEditing, setChapterEditing] = useState<ChapterItem | null | undefined>(null)
   const [isChangeOrder, setIsChangeOrder] = useState<boolean>(false)
   const {
@@ -135,7 +133,6 @@ function EditCourse() {
     },
     queryKey: ['course', slug],
   })
-
   const { mutateAsync: updateCourse, isPending } = useMutation({
     mutationFn: async (arg: { payload: Partial<Course> }) => {
       const { payload } = arg
@@ -191,8 +188,6 @@ function EditCourse() {
             isNew: false,
           })) || [],
       })
-      setTitle(course.title || '')
-      setDescription(course.description || '')
       const sortedChapters = course.chapters
         .sort((a, b) => a.position - b.position)
         .map((c) => ({
@@ -229,7 +224,6 @@ function EditCourse() {
     // setChapterEditingId(newItem.id)
     setItems((prev) => [...prev, newItem])
   }, [items.length])
-  const handleResetItems = useCallback(() => setItems([]), [])
 
   const handleCompleteItem = useCallback((id: number) => {
     setItems((prevItems) =>
@@ -237,9 +231,7 @@ function EditCourse() {
     )
   }, [])
 
-  const handleRemoveItem = useCallback((id: number) => {
-    setItems((prevItems) => prevItems.filter((item) => item.id !== id))
-  }, [])
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   const handleUpdateItem = useCallback(
     (id: number, text: string) => {
       if (!course) return
@@ -325,7 +317,7 @@ function EditCourse() {
 
     // Prepare payload
     const changedChapters = [
-      ...updatedChapters.map((item, idx) => ({
+      ...updatedChapters.map((item) => ({
         ...item,
         is_new: false,
         position: items.findIndex((i) => i.id === item.id) + 1,

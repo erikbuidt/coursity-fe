@@ -18,7 +18,6 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb'
-import { mockCourses } from '@/mocks/course'
 import Pagination from '@/components/custom/pagination'
 import { courseApi } from '@/services/courseService'
 async function Courses(props: {

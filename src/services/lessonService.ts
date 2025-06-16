@@ -24,7 +24,7 @@ async function completeLesson(
     return res.payload.data
     // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   } catch (error: any) {
-    console.error('Error fetching courses:', error)
+    console.error('Error completing lesson:', error)
 
     if (error.response) {
       console.error('Status code:', error.response.status)
@@ -33,7 +33,7 @@ async function completeLesson(
       console.error('Error message:', error.message)
     }
 
-    throw new Error('Failed to fetch courses. Please try again later.')
+    throw new Error('Failed to completing lesson. Please try again later.')
   }
 }
 
@@ -172,9 +172,33 @@ async function createLesson(payload: Partial<Lesson>, token: string): Promise<Le
     return null
   }
 }
+
+async function deleteLesson(lessonId: number, token: string): Promise<unknown> {
+  try {
+    const res = await http.delete<SuccessResApi<{ lesson_id: number }[]>>(`/lessons/${lessonId}`, {
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
+    })
+    return res.payload.data
+    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  } catch (error: any) {
+    console.error('Error delete lesson:', error)
+
+    if (error.response) {
+      console.error('Status code:', error.response.status)
+      console.error('Error data:', error.response.data)
+    } else {
+      console.error('Error message:', error.message)
+    }
+
+    throw new Error('Failed to delete lesson. Please try again later.')
+  }
+}
 export const lessonApi = {
   completeLesson,
   updateLessonPositions,
   updateLesson,
   createLesson,
+  deleteLesson,
 }

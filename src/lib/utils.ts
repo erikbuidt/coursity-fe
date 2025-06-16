@@ -5,8 +5,8 @@ import { twMerge } from 'tailwind-merge'
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
-export function formatCurrency(currency: number) {
-  return new Intl.NumberFormat('de-DE').format(currency)
+export function formatCurrency(currency: number | string) {
+  return new Intl.NumberFormat('de-DE').format(+currency)
 }
 
 export function formatNumberToSocialStyle(value: number) {
