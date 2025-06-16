@@ -163,7 +163,6 @@ export function EditChapterDialog({
                   items={items}
                   onReorder={handleReorder}
                   setItems={setItems}
-                  onCompleteItem={handleCompleteItem}
                   onSelectItem={handleSelectItem}
                   renderItem={renderItem}
                   editingItem={editingLesson}

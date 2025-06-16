@@ -2,7 +2,11 @@
 
 import { GripVertical } from 'lucide-react'
 import { AnimatePresence, LayoutGroup, Reorder, useDragControls } from 'motion/react'
+// npx shadcn-ui@latest add checkbox
+// npm  i react-use-measure
 import { type Dispatch, type ReactNode, type SetStateAction, useState } from 'react'
+import useMeasure from 'react-use-measure'
+
 import { cn } from '@/lib/utils'
 import type { Lesson } from '@/types/course.type'
 
@@ -25,6 +29,7 @@ function SortableLessonListItem({
   selected,
   onSelectItem,
 }: SortableListItemProps) {
+  const [ref, bounds] = useMeasure()
   const [isDragging, setIsDragging] = useState(false)
   const dragControls = useDragControls()
 
@@ -65,7 +70,7 @@ function SortableLessonListItem({
         }}
         whileDrag={{ zIndex: 9999 }}
       >
-        <div className={cn('z-20 ')}>
+        <div ref={ref} className={cn('z-20 ')}>
           <div className="flex items-center justify-between ">
             <h3
               className={cn(
@@ -73,12 +78,15 @@ function SortableLessonListItem({
                 item.checked ? 'text-red-400' : 'text-black',
               )}
             >
-              <span className="text-md">{order + 1}.</span>
-              {item.checked ? 'Delete' : ` ${item.title}`}
+              <span className="text-md">{order + 1}. </span>
+              {item.title}
             </h3>
             <div
               className="cursor-grab p-2"
-              onPointerDown={handleDragStart}
+              onPointerDown={(e) => {
+                e.preventDefault()
+                handleDragStart(e)
+              }}
               style={{ touchAction: 'none' }}
             >
               <GripVertical />
@@ -99,14 +107,11 @@ interface SortableListProps {
   onReorder: (newItems: LessonItem[]) => void
   editingItem: LessonItem | null
   setItems: Dispatch<SetStateAction<LessonItem[]>>
-  onCompleteItem: (id: number) => void
   onSelectItem: (id: number) => void
   renderItem: (
     item: LessonItem,
     editingItem: LessonItem | null,
     order: number,
-    onCompleteItem: (id: number) => void,
-    onRemoveItem: (id: number) => void,
     onSelectItem: (id: number) => void,
   ) => ReactNode
 }
@@ -116,7 +121,6 @@ function SortableLessonList({
   onReorder,
   editingItem,
   setItems,
-  onCompleteItem,
   onSelectItem,
   renderItem,
 }: SortableListProps) {
@@ -142,8 +146,6 @@ function SortableLessonList({
                   item,
                   editingItem,
                   index,
-                  onCompleteItem,
-                  (id: number) => setItems((items) => items.filter((item) => item.id !== id)),
                   onSelectItem,
                 ),
               )}
