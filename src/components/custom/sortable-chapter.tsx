@@ -156,7 +156,7 @@ function SortableChapterListItem({
                           }}
                         >
                           {editingId || item.isNew ? (
-                            <div>
+                            <div className='py-2'>
                               <div className="flex items-center justify-start gap-1">
                                 {item.isNew && (
                                   <Label className="text-xs min-w-20">New chapter</Label>
@@ -168,7 +168,7 @@ function SortableChapterListItem({
                                 />
                               </div>
 
-                              <div className="flex justify-end gap-2 mt-2">
+                              <div className="flex justify-end gap-2 mt-2 py-2">
                                 {/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
                                 <Button onClick={cancelEdit} variant="outline">
                                   Cancel

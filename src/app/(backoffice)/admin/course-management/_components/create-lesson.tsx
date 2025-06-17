@@ -182,7 +182,7 @@ function CreateLesson({ chapter_id }: { chapter_id: number }) {
               control={control}
               render={({ field }) => <Input {...field} error={errors.video_url?.message} />}
             />
-            {ytbThumbnail && <Image width={200} height={300} src={ytbThumbnail} alt="" />}
+            {ytbThumbnail && <Image className='rounded-lg overflow-hidden' width={200} height={300} src={ytbThumbnail} alt="" />}
           </div>
         )}
         <div className="mt-auto flex">

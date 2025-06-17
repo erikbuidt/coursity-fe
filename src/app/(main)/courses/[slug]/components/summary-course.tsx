@@ -42,7 +42,7 @@ function SummaryCourse({ course }: Props) {
     )
   }
   return (
-    <Card className="py-0 gap-0 overflow-hidden relative top-[-220px]">
+    <Card className="py-0 gap-0 overflow-hidden relative md:top-[-243px]">
       <HeroVideoDialog
         className="block dark:hidden shadow-none"
         animationStyle="top-in-bottom-out"

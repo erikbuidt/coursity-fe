@@ -1,4 +1,5 @@
 import NavBar from '@/components/custom/nav-bar'
+import MobileNavBar from '@/components/custom/mobile-nav-bar'
 import { Button } from '@/components/ui/button'
 import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/nextjs'
 import { Geist, Geist_Mono } from 'next/font/google'
@@ -26,7 +27,12 @@ export default function MainLayout({
             <Link href="/">
               <Image src="/images/logo-icon.png" width={50} height={50} alt="logo" />
             </Link>
-            <NavBar />
+            <div className="hidden md:block">
+              <NavBar />
+            </div>
+            <div className="block md:hidden">
+              <MobileNavBar />
+            </div>
             <div className="space-x-2">
               <SignedOut>
                 <SignInButton>

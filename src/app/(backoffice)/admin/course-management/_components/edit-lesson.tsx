@@ -184,8 +184,8 @@ function EditLesson({
               control={control}
               render={({ field }) => <Input {...field} />}
             />
-            <div>
-              {ytbThumbnail && <Image width={200} height={300} src={ytbThumbnail} alt="" />}
+            <div className=''>
+              {ytbThumbnail && <Image className='rounded-lg overflow-hidden' width={200} height={300} src={ytbThumbnail} alt="" />}
             </div>
           </div>
         )}
