@@ -1,6 +1,9 @@
 # Base Stage: Install dependencies
 FROM node:18-alpine AS base
 
+ARG NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
+ENV NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
+
 # Set working directory
 WORKDIR /app
 
