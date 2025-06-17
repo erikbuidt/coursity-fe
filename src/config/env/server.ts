@@ -3,9 +3,9 @@ import { z } from 'zod'
 
 export const env = createEnv({
   server: {
-    CLERK_SECRET_KEY: z.string().min(1),
-    CLERK_WEBHOOK_SECRET: z.string().min(1),
-    CLERK_API_KEY: z.string().min(1),
+    CLERK_SECRET_KEY: z.string().default(''),
+    CLERK_WEBHOOK_SECRET: z.string().default(''),
+    CLERK_API_KEY: z.string().default(''),
   },
   experimental__runtimeEnv: process.env,
 })
