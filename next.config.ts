@@ -4,9 +4,7 @@ const nextConfig: NextConfig = {
   /* config options here */
   images: {
     remotePatterns: [
-      new URL('http://localhost:4000/api/v1/files/**'),
-      new URL('https://picsum.photos/**'),
-      new URL('https://example.com/**'),
+      new URL('https://api.coursity.io.vn/api/v1/files/**'),
       new URL('https://img.youtube.com/**'),
     ],
   },
