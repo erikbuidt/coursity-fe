@@ -39,6 +39,7 @@ export async function POST(request: NextRequest) {
           image_url: event.data.image_url,
           role: 'student',
         })
+        console.log({user})
         await syncClerkUserMetadata(user)
       } else {
         await updateClerkUser({
