@@ -8,6 +8,7 @@ import type { NextRequest } from 'next/server'
 export async function POST(request: NextRequest) {
   // Get the headers
   let event: WebhookEvent
+  console.log('Received webhook request')
   // Verify the payload with the headers
   try {
     event = await verifyWebhook(request, {
