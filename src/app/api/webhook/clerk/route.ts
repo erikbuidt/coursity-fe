@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
       const name = `${event.data.first_name ?? ''} ${event.data.last_name ?? ''}`.trim()
       if (email == null) return new Response('No email', { status: 400 })
       if (name === '') return new Response('No name', { status: 400 })
-
+      console.log({event})
       if (event.type === 'user.created') {
         const user = await createClerkUser({
           clerk_user_id: event.data.id,
