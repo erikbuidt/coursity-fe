@@ -23,7 +23,7 @@ const request = async <Response>(
   // }
   const baseUrl =
     options?.baseUrl === undefined
-      ? process.env.NEXT_PUBLIC_API_ENDPOINT || 'https://api.ssrengineering.tech'
+      ? process.env.NEXT_PUBLIC_API_ENDPOINT || 'https://api.coursity.io.vn/api/v1'
       : options.baseUrl
 
   const fullUrl = url.startsWith('/') ? `${baseUrl}${url}` : `${baseUrl}/${url}`
