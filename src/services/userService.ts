@@ -4,6 +4,7 @@ import type { User, CreateClerkUser, UpdateClerkUser } from '@/types/user.type'
 import type { SuccessResApi } from '@/types/util.type'
 
 export async function createClerkUser(createClerkUser: CreateClerkUser): Promise<User> {
+  console.log("CLERK_API_KEY", env.CLERK_API_KEY)
   const res = await http.post<SuccessResApi<User>>('/user/create-clerk-user', createClerkUser, {
     headers: {
       apikey: env.CLERK_API_KEY,
