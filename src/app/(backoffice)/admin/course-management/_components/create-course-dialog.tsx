@@ -48,7 +48,7 @@ const createCourseSchema: ZodType<FormData> = z.object({
       required_error: 'Description is required',
     })
     .nonempty(),
-  price: z.number({
+  price: z.any({
     required_error: 'Price is required',
   }),
   thumbnail: z
@@ -100,6 +100,7 @@ export function CreateCourseDialog({
     },
     resolver: zodResolver(createCourseSchema),
   })
+  console.log({ errors })
   const { mutateAsync: createCourse, isPending } = useMutation({
     mutationFn: async (args: { formaData: FormData }) => {
       const token = await getToken()

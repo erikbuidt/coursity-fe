@@ -46,8 +46,8 @@ function SummaryCourse({ course }: Props) {
       <HeroVideoDialog
         className="block dark:hidden shadow-none"
         animationStyle="top-in-bottom-out"
-        videoSrc="https://www.youtube.com/embed/qh3NGpYRG3I?si=4rb-zSdDkVK9qxxb"
-        thumbnailSrc="https://startup-template-sage.vercel.app/hero-light.png"
+        videoSrc={course.promotion_video_url}
+        thumbnailSrc={course.image_url}
         thumbnailAlt="Hero Video"
       />
       <CardContent className="py-6">

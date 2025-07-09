@@ -60,7 +60,7 @@ export const VideoUpload = (
         accept="video/mp4"
         error={field.error}
       />
-      <div className="w-40 rounded-md mt-3 relative group">
+      <div className="w-[100%] rounded-md mt-3 relative group">
         <div className="rounded-md overflow-hidden">
           {selectedFile ? (
             // biome-ignore lint/a11y/useMediaCaption: <explanation>
@@ -76,10 +76,10 @@ export const VideoUpload = (
             )
           )}
         </div>
-        <CircleX
+        {/* <CircleX
           onClick={onRemove}
           className="group-hover:block hidden cursor-pointer absolute right-0 top-0 -translate-1/2 translate-x-1/2 text-red-400"
-        />
+        /> */}
       </div>
     </div>
   )

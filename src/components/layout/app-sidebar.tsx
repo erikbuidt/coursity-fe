@@ -1,20 +1,18 @@
 'use client'
-import { BookOpen, ChevronDown, LayoutDashboard, Inbox, Plus, Search, Settings } from 'lucide-react'
+import { BookOpen, LayoutDashboard, ScanEye } from 'lucide-react'
 
 import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
-  SidebarGroupAction,
   SidebarGroupContent,
   SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar'
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@radix-ui/react-collapsible'
-import { usePathname } from 'next/navigation'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import type { NavItem } from './types'
 
 // Menu items.
@@ -25,14 +23,14 @@ const items: NavItem[] = [
     icon: LayoutDashboard,
   },
   {
-    title: 'Course',
+    title: 'Courses',
     url: '/admin/course-management',
     icon: BookOpen,
   },
   {
-    title: 'Settings',
-    url: '#',
-    icon: Settings,
+    title: 'Reviews',
+    url: '/admin/reviews',
+    icon: ScanEye,
   },
 ]
 
@@ -58,7 +56,7 @@ export function AppSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-        <Collapsible defaultOpen className="group/collapsible">
+        {/* <Collapsible defaultOpen className="group/collapsible">
           <SidebarGroup>
             <SidebarGroupLabel asChild>
               <CollapsibleTrigger>
@@ -83,7 +81,7 @@ export function AppSidebar() {
               </SidebarGroupContent>
             </CollapsibleContent>
           </SidebarGroup>
-        </Collapsible>
+        </Collapsible> */}
       </SidebarContent>
     </Sidebar>
   )

@@ -1,3 +1,4 @@
+import type { COURSE_STATUS } from '@/constants/course'
 import { z, ZodType } from 'zod' // Add new import
 
 export type Course = {
@@ -7,6 +8,7 @@ export type Course = {
   title: string
   description: string
   image_url: string
+  promotion_video_url: string
   price: number | string
   discount_price: number
   duration: number
@@ -15,6 +17,7 @@ export type Course = {
   lesson_count: number
   chapters: Chapter[]
   is_enrolled: boolean
+  status: COURSE_STATUS
 }
 export type Pagination<T> = {
   items: T[]

@@ -14,6 +14,7 @@ import { useSearchParams } from 'next/navigation'
 function Course() {
   const searchParams = useSearchParams()
   const page = searchParams.get('page') || 1
+  const { getToken } = useAuth()
   const [openCourseDialog, setOpenCourseDialog] = useState<boolean>(false)
   const {
     data: courses,
@@ -21,14 +22,15 @@ function Course() {
     isLoading,
   } = useQuery({
     queryFn: async () => {
-      return courseApi.getCourses({ page: +page, limit: 12 })
+      const token = await getToken()
+      return courseApi.getAllCourses({ page: +page, limit: 12 }, token || '')
     },
     queryKey: ['courses', page],
     staleTime: 10 * 60 * 1000,
   })
 
   return (
-    <div>
+    <div className="flex flex-col ">
       <div className="flex justify-between">
         <h1 className="text-xl font-bold">Course Management</h1>
         <Button onClick={() => setOpenCourseDialog(true)}>
@@ -52,7 +54,7 @@ function Course() {
       <div className="mt-4">
         {!isLoading && (
           <Pagination
-            pageSize={courses?.meta.total_pages || 10}
+            pageSize={courses?.meta.total_pages || 1}
             queryConfig={{ page: courses?.meta.current_page || 1 }}
           />
         )}

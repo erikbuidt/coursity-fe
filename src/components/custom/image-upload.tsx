@@ -54,7 +54,7 @@ export const ImageUpload = (
         accept="image/png, image/jpeg"
         error={field.error}
       />
-      <div className="w-40 rounded-md mt-3 relative group">
+      <div className="w-[100%] rounded-md mt-3 relative group">
         <div className="rounded-md overflow-hidden">
           {selectedFile ? (
             <img src={preview} alt="" width={300} height={400} className="max-h-40" />

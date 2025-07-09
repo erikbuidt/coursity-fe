@@ -78,7 +78,7 @@ const categories = [
 
 // Added responsive styles for tablet and mobile
 export default async function Home() {
-  const { items: courses } = await courseApi.getCourses({
+  const { items: courses } = await courseApi.getPublishedCourses({
     page: 1,
     limit: 10,
   })
@@ -90,8 +90,7 @@ export default async function Home() {
           <div className="mt-5 max-w-xl text-left px-4 md:px-0">
             <FadeInStaggered className="" delay={500}>
               <h1 className="text-white scroll-m-20 text-3xl md:text-4xl lg:text-5xl font-bold">
-                Learn New Skills Online with {' '}
-                <span className=" text-amber-500">Coursity</span>
+                Learn New Skills Online with <span className=" text-amber-500">Coursity</span>
               </h1>
               <p className="text-base md:text-lg text-white mt-6 md:mt-10">
                 Over 10+ fully responsive, UI blocks you can drop into your Shadcn UI projects and
@@ -161,7 +160,9 @@ export default async function Home() {
       </section>
 
       <section className="container mt-10 md:mt-20 md:max-w-5xl lg:max-w-6xl xl:max-w-7xl px-4">
-        <h2 className="text-xl md:text-2xl font-bold text-center mt-6 md:mt-8">Most Popular Courses</h2>
+        <h2 className="text-xl md:text-2xl font-bold text-center mt-6 md:mt-8">
+          Most Popular Courses
+        </h2>
         <FadeInStaggered className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-6 md:mt-10">
           {courses.map((course, i) => (
             <CourseCard key={course.id} course={course} />
@@ -171,7 +172,9 @@ export default async function Home() {
 
       <section className="mt-10 md:mt-20 bg-indigo-950 px-4">
         <div className="container mt-10 md:mt-20 py-10 md:py-20 md:max-w-5xl lg:max-w-6xl xl:max-w-7xl px-4 md:px-0">
-          <h2 className="text-2xl md:text-4xl font-bold text-white text-center">Why learn with our courses?</h2>
+          <h2 className="text-2xl md:text-4xl font-bold text-white text-center">
+            Why learn with our courses?
+          </h2>
           <div className="max-w-[1200px] mx-auto mt-6 md:mt-10">
             <FadeInStaggered className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8 mt-10 md:mt-20 ">
               {Array.from({ length: 3 }).map((_, i) => (

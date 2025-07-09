@@ -3,11 +3,37 @@ import { createSearchParams } from '@/lib/utils'
 import type { Course, CourseProgress, CreateCoursePayload, Pagination } from '@/types/course.type'
 import type { QueryParams, SuccessResApi } from '@/types/util.type'
 
-async function getCourses(queryParams: QueryParams): Promise<Pagination<Course>> {
+async function getPublishedCourses(queryParams: QueryParams): Promise<Pagination<Course>> {
   try {
     const res = await http.get<SuccessResApi<Pagination<Course>>>(
       `/courses?${createSearchParams(queryParams)}`,
       {},
+    )
+    return res.payload.data
+  } catch (error: any) {
+    console.error('Error fetching courses:', error)
+
+    if (error.response) {
+      console.error('Status code:', error.response.status)
+      console.error('Error data:', error.response.data)
+    } else {
+      console.error('Error message:', error.message)
+    }
+
+    throw new Error('Failed to fetch courses. Please try again later.')
+  }
+}
+async function getAllCourses(queryParams: QueryParams, token: string): Promise<Pagination<Course>> {
+  try {
+    const res = await http.get<SuccessResApi<Pagination<Course>>>(
+      `/courses/all?${createSearchParams(queryParams)}`,
+      token
+        ? {
+            headers: {
+              authorization: `Bearer ${token}`,
+            },
+          }
+        : {},
     )
     return res.payload.data
   } catch (error: any) {
@@ -120,6 +146,43 @@ async function updateCourse(
   }
 }
 
+async function submitToReview(slug: string, token: string): Promise<Course | null> {
+  try {
+    // biome-ignore lint/complexity/noForEach: <explanation>
+    console.log('here')
+    const res = await http.post<SuccessResApi<Course>>(
+      `/courses/${slug}/submit-to-review`,
+      {},
+      token
+        ? {
+            headers: {
+              authorization: `Bearer ${token}`,
+            },
+          }
+        : {},
+    )
+    return res.payload.data
+  } catch (error: any) {
+    console.error('Error fetching course:', error)
+
+    if (error.response) {
+      console.error('Status code:', error.response.status)
+      console.error('Error data:', error.response.data)
+
+      if (error.response.status === 404) {
+        throw new Error('Course not found')
+      }
+    } else {
+      if (error.response.status === 400) {
+        console.log(error.response.data)
+        throw new Error('Bad request')
+      }
+    }
+
+    return null
+  }
+}
+
 async function createCourse(payload: CreateCoursePayload, token: string): Promise<Course | null> {
   try {
     const formData = new FormData()
@@ -165,8 +228,10 @@ async function createCourse(payload: CreateCoursePayload, token: string): Promis
 }
 export const courseApi = {
   getCourse,
-  getCourses,
+  getAllCourses,
+  getPublishedCourses,
   getCourseProgress,
   createCourse,
   updateCourse,
+  submitToReview,
 }

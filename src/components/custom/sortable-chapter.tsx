@@ -156,7 +156,7 @@ function SortableChapterListItem({
                           }}
                         >
                           {editingId || item.isNew ? (
-                            <div className='py-2'>
+                            <div className="py-2">
                               <div className="flex items-center justify-start gap-1">
                                 {item.isNew && (
                                   <Label className="text-xs min-w-20">New chapter</Label>
@@ -181,7 +181,11 @@ function SortableChapterListItem({
                                       onUpdateItem(editingId, inputValue)
                                       setEditingId(null)
                                     }
-                                    if (onCreateItem && item.isNew) onCreateItem(item)
+                                    if (onCreateItem && item.isNew)
+                                      onCreateItem({
+                                        ...item,
+                                        title: inputValue,
+                                      })
                                     setInputValue('')
                                   }}
                                   // disabled={!editingText.trim()}

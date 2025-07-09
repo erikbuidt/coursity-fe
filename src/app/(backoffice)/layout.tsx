@@ -24,7 +24,7 @@ export default function BackOfficeLayout({
               </SignedIn>
             </div>
           </div>
-          <div className="mt-4">{children}</div>
+          <div className="mt-4 h-[100%]">{children}</div>
         </div>
       </ThemeProvider>
     </SidebarProvider>

@@ -27,7 +27,7 @@ async function Courses(props: {
 
   const page = Number(searchParams.page) || 1
   const search = searchParams.search || ''
-  const { items: courses, meta } = await courseApi.getCourses({ page, search })
+  const { items: courses, meta } = await courseApi.getPublishedCourses({ page, search })
   return (
     <>
       <div className="bg-stone-100">

@@ -3,7 +3,11 @@ import { useEffect, useRef } from 'react'
 import Plyr from 'plyr'
 import 'plyr/dist/plyr.css'
 
-export default function Player({ src, onEnded }: { src: string; onEnded?: () => void }) {
+export default function Player({
+  src,
+  className,
+  onEnded,
+}: { src: string; className?: string; onEnded?: () => void }) {
   const containerRef = useRef<HTMLDivElement | null>(null)
   const videoRef = useRef<HTMLVideoElement | null>(null)
   const plyrInstance = useRef<Plyr | null>(null)
@@ -14,7 +18,7 @@ export default function Player({ src, onEnded }: { src: string; onEnded?: () => 
 
     // Create video element manually
     const video = document.createElement('video')
-    video.className = 'w-[640px] h-[360px]'
+    video.className = className || 'w-[640px] h-[360px]'
     containerRef.current.innerHTML = '' // Clear previous video
     containerRef.current.appendChild(video)
     videoRef.current = video // Store reference for cleanup
