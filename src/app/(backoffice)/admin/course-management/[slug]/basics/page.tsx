@@ -77,7 +77,7 @@ const updateCourseSchema: ZodType<FormData> = z.object({
   image_url: z.string({
     required_error: 'Image URL is required',
   }),
-  promotion_video_url: z.string().optional(),
+  promotion_video_url: z.any().optional(),
 })
 function Basics() {
   const queryClient = useQueryClient()
@@ -125,7 +125,7 @@ function Basics() {
         thumbnail: null, // or course.thumbnail if you have it as a File or URL
         category: course.category || '',
         image_url: course.image_url,
-        promotion_video_url: course.promotion_video_url,
+        promotion_video_url: course.promotion_video_url || '',
       })
     }
   }, [course, reset])

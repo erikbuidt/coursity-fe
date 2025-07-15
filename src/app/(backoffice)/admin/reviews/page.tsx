@@ -1,88 +1,40 @@
 'use client'
 
+import type { ColumnDef } from '@tanstack/react-table'
+import { ArrowUpDown, MoreHorizontal } from 'lucide-react'
 import * as React from 'react'
-import {
-  type ColumnDef,
-  type ColumnFiltersState,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  type SortingState,
-  useReactTable,
-  type VisibilityState,
-} from '@tanstack/react-table'
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Input } from '@/components/ui/input'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table'
 
-const data: any[] = [
-  {
-    id: 'm5gr84i9',
-    price: 316,
-    status: 'success',
-    email: 'ken99@example.com',
-    title: 'Test',
-  },
-  {
-    id: '3u1reuv4',
-    price: 242,
-    status: 'success',
-    email: 'Abe45@example.com',
-    title: 'Test',
-  },
-  {
-    id: 'derv1ws0',
-    price: 837,
-    status: 'processing',
-    email: 'Monserrat44@example.com',
-    title: 'Test',
-  },
-  {
-    id: '5kma53ae',
-    price: 874,
-    status: 'success',
-    email: 'Silas22@example.com',
-    title: 'Test',
-  },
-  {
-    id: 'bhqecj4p',
-    price: 721,
-    status: 'failed',
-    email: 'carmella@example.com',
-    title: 'Test',
-  },
+import { MultiSelect, type Option } from '@/components/custom/multi-select'
+import Table from '@/components/custom/table'
+import { Badge } from '@/components/ui/badge'
+import { COURSE_STATUS, courseStatusMapping } from '@/constants/course'
+import useFilters from '@/hooks/use-filters'
+import { courseApi } from '@/services/courseService'
+import type { Course } from '@/types/course.type'
+import { useAuth } from '@clerk/nextjs'
+import { useQuery } from '@tanstack/react-query'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { Input } from '@/components/ui/input'
+import { useDebounce } from '@/hooks/use-debounce'
+
+const options: Option[] = [
+  { label: 'In Review', value: 'in_review' },
+  { label: 'Rejected', value: 'rejected' },
+  { label: 'Published', value: 'published' },
 ]
 
-export type Course = {
-  id: string
-  price: number
-  status: 'pending' | 'processing' | 'success' | 'failed'
-  email: string
-  title: string
-}
-
-export const columns: ColumnDef<Course>[] = [
+const columns: ColumnDef<Course>[] = [
   {
     id: 'select',
     header: ({ table }) => (
@@ -107,7 +59,25 @@ export const columns: ColumnDef<Course>[] = [
   {
     accessorKey: 'status',
     header: 'Status',
-    cell: ({ row }) => <div className="capitalize">{row.getValue('status')}</div>,
+    cell: ({ row }) => (
+      <div className="capitalize">
+        {row.getValue('status') === COURSE_STATUS.IN_REVIEW ? (
+          <Badge variant="secondary">
+            {courseStatusMapping[row.getValue('status') as COURSE_STATUS]}
+          </Badge>
+        ) : row.getValue('status') === COURSE_STATUS.PUBLISHED ? (
+          <Badge variant="default">
+            {courseStatusMapping[row.getValue('status') as COURSE_STATUS]}
+          </Badge>
+        ) : row.getValue('status') === COURSE_STATUS.REJECTED ? (
+          <Badge variant="destructive">
+            {courseStatusMapping[row.getValue('status') as COURSE_STATUS]}
+          </Badge>
+        ) : (
+          ''
+        )}
+      </div>
+    ),
   },
   {
     accessorKey: 'title',
@@ -125,7 +95,7 @@ export const columns: ColumnDef<Course>[] = [
     cell: ({ row }) => <div className="lowercase">{row.getValue('title')}</div>,
   },
   {
-    accessorKey: 'email',
+    accessorKey: 'instructor_email',
     header: ({ column }) => {
       return (
         <Button
@@ -137,7 +107,7 @@ export const columns: ColumnDef<Course>[] = [
         </Button>
       )
     },
-    cell: ({ row }) => <div className="lowercase">{row.getValue('email')}</div>,
+    cell: ({ row }) => <div className="lowercase">{row.getValue('instructor_email')}</div>,
   },
   {
     accessorKey: 'price',
@@ -157,22 +127,18 @@ export const columns: ColumnDef<Course>[] = [
   {
     id: 'actions',
     enableHiding: false,
-    cell: ({ row }) => {
-      const payment = row.original
-
+    meta: 'flex justify-center',
+    cell: () => {
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
+            <Button variant="ghost" className="h-8 w-8 p-0 text-center">
               <span className="sr-only">Open menu</span>
               <MoreHorizontal />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(payment.id)}>
-              Copy payment ID
-            </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem>View customer</DropdownMenuItem>
             <DropdownMenuItem>View payment details</DropdownMenuItem>
@@ -182,127 +148,135 @@ export const columns: ColumnDef<Course>[] = [
     },
   },
 ]
-
 export default function DataTableDemo() {
-  const [sorting, setSorting] = React.useState<SortingState>([])
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
-  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
-  const [rowSelection, setRowSelection] = React.useState({})
+  const { getToken } = useAuth()
+  const [selected, setSelected] = React.useState<Option[]>([])
+  const [searchTerm, setSearchTerm] = React.useState('')
+  const debouncedSearchTerm = useDebounce(searchTerm, 500)
+  const filterConfig = useFilters()
+  const router = useRouter()
+  const searchParams = useSearchParams()
 
-  const table = useReactTable({
-    data,
-    columns,
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
-    state: {
-      sorting,
-      columnFilters,
-      columnVisibility,
-      rowSelection,
+  // Pagination state
+  const page = Number(searchParams.get('page') || '1')
+  const limit = Number(searchParams.get('limit') || '10')
+  const pagination = React.useMemo(
+    () => ({
+      pageIndex: page - 1,
+      pageSize: limit,
+    }),
+    [page, limit],
+  )
+
+  // Query for courses
+  const {
+    data: courses,
+    error,
+    isLoading,
+  } = useQuery({
+    queryKey: ['courses-reviews', filterConfig],
+    queryFn: async () => {
+      const token = await getToken()
+      return courseApi.getAllCourses(
+        {
+          page: filterConfig.page ? Number(filterConfig.page) : 1,
+          limit: Math.min(filterConfig.limit ? Number(filterConfig.limit) : 20, 20),
+          status: filterConfig.status,
+          search: filterConfig.search,
+        },
+        token || '',
+      )
     },
+    staleTime: 10 * 60 * 1000,
   })
+
+  // Sync selected status with filterConfig
+  React.useEffect(() => {
+    const arrStatus = filterConfig.status?.split(',') || []
+    setSelected(options.filter((o) => arrStatus.includes(o.value)))
+  }, [filterConfig.status])
+
+  // Update status param in URL when selected changes
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  React.useEffect(() => {
+    const status = selected.map((o) => o.value).join(',')
+    const params = new URLSearchParams(searchParams.toString())
+    if (status) {
+      params.set('status', status)
+    } else {
+      params.delete('status')
+    }
+    router.replace(`?${params.toString()}`)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selected])
+
+  // Update search param in URL when debouncedSearchTerm changes
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  React.useEffect(() => {
+    const params = new URLSearchParams(searchParams.toString())
+    if (debouncedSearchTerm) {
+      params.set('search', debouncedSearchTerm)
+    } else {
+      params.delete('search')
+    }
+    router.replace(`?${params.toString()}`)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedSearchTerm])
+
+  // Keep searchTerm in sync with filterConfig.search
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  React.useEffect(() => {
+    if (filterConfig.search !== searchTerm) {
+      setSearchTerm(filterConfig.search || '')
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filterConfig.search])
+
+  // Handle pagination change
+  const handlePaginationChange = React.useCallback(
+    (paginate: any) => {
+      let pageIndex = pagination.pageIndex
+      let pageSize = pagination.pageSize
+      if (typeof paginate === 'function') {
+        const result = paginate(pagination)
+        pageIndex = result.pageIndex
+        pageSize = result.pageSize
+      } else if (paginate && typeof paginate === 'object') {
+        pageIndex = paginate.pageIndex
+        pageSize = paginate.pageSize
+      }
+      const params = new URLSearchParams(searchParams.toString())
+      params.set('page', (pageIndex + 1).toString())
+      params.set('limit', pageSize.toString())
+      router.replace(`?${params.toString()}`)
+    },
+    [pagination, router, searchParams],
+  )
 
   return (
     <div className="w-full">
-      <div className="flex items-center py-4">
+      <div className="flex items-center py-4 gap-2">
         <Input
-          placeholder="Filter emails..."
-          value={(table.getColumn('email')?.getFilterValue() as string) ?? ''}
-          onChange={(event) => table.getColumn('email')?.setFilterValue(event.target.value)}
+          placeholder="Search..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
           className="max-w-sm"
         />
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
-              Columns <ChevronDown />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {table
-              .getAllColumns()
-              .filter((column) => column.getCanHide())
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) => column.toggleVisibility(!!value)}
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-                )
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div>
+          <MultiSelect onChange={setSelected} options={options} selected={selected} />
+        </div>
       </div>
       <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(header.column.columnDef.header, header.getContext())}
-                    </TableHead>
-                  )
-                })}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
-                  No results.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
-      <div className="flex items-center justify-end space-x-2 py-4">
-        <div className="text-muted-foreground flex-1 text-sm">
-          {table.getFilteredSelectedRowModel().rows.length} of{' '}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
-        </div>
-        <div className="space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            Previous
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            Next
-          </Button>
-        </div>
+        <Table
+          data={courses?.items || []}
+          columns={columns}
+          pagination={pagination}
+          paginationOptions={{
+            pageCount: courses?.meta.total_pages,
+            manualPagination: true,
+            onPaginationChange: handlePaginationChange,
+          }}
+        />
       </div>
     </div>
   )

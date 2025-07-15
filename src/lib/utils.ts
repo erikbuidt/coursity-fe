@@ -42,3 +42,15 @@ export function createSearchParams(queryParams: QueryParams) {
     ),
   )
 }
+
+export const cleanEmptyParams = <T extends Record<string, unknown>>(search: T) => {
+  const newSearch = { ...search }
+  // biome-ignore lint/complexity/noForEach: <explanation>
+  Object.keys(newSearch).forEach((key) => {
+    const value = newSearch[key]
+    if (value === undefined || value === '' || (typeof value === 'number' && Number.isNaN(value)))
+      delete newSearch[key]
+  })
+
+  return newSearch
+}

@@ -10,13 +10,8 @@ import Link from 'next/link'
 import { useParams, usePathname } from 'next/navigation'
 import { toast } from 'sonner'
 import { Badge } from '@/components/ui/badge'
-import { COURSE_STATUS } from '@/constants/course'
-const courseStatus = {
-  draft: 'Draft',
-  published: 'Published',
-  in_review: 'In Review',
-  rejected: 'Rejected',
-}
+import { COURSE_STATUS, courseStatusMapping } from '@/constants/course'
+
 function Navigation() {
   const pathname = usePathname().split('/').slice(-1)[0] || ''
   const { slug } = useParams()
@@ -110,11 +105,11 @@ function Navigation() {
           Submit for review
         </LoadingButton>
       ) : course?.status === COURSE_STATUS.IN_REVIEW ? (
-        <Badge variant="secondary">{course && courseStatus[course.status]}</Badge>
+        <Badge variant="secondary">{course && courseStatusMapping[course.status]}</Badge>
       ) : course?.status === COURSE_STATUS.PUBLISHED ? (
-        <Badge variant="default">{course && courseStatus[course.status]}</Badge>
+        <Badge variant="default">{course && courseStatusMapping[course.status]}</Badge>
       ) : course?.status === COURSE_STATUS.REJECTED ? (
-        <Badge variant="destructive">{course && courseStatus[course.status]}</Badge>
+        <Badge variant="destructive">{course && courseStatusMapping[course.status]}</Badge>
       ) : (
         ''
       )}

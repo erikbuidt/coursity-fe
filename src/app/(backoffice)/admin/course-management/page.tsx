@@ -23,6 +23,7 @@ function Course() {
   } = useQuery({
     queryFn: async () => {
       const token = await getToken()
+      console.log({ token })
       return courseApi.getAllCourses({ page: +page, limit: 12 }, token || '')
     },
     queryKey: ['courses', page],

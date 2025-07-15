@@ -88,3 +88,10 @@ export const createCourseSchema = z.object({
   will_learns: z.array(z.string()).min(1, { message: 'At least one is required' }),
   requirements: z.array(z.string()).min(1, { message: 'At least one is required' }),
 })
+
+export interface CourseListConfig {
+  page?: number
+  limit?: number
+  status?: string
+  search?: string
+}
