@@ -1,5 +1,4 @@
 'use client'
-import { BookOpen, LayoutDashboard, ScanEye } from 'lucide-react'
 
 import {
   Sidebar,
@@ -15,26 +14,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import type { NavItem } from './types'
 
-// Menu items.
-const items: NavItem[] = [
-  {
-    title: 'Dashboard',
-    url: '/admin/dashboard',
-    icon: LayoutDashboard,
-  },
-  {
-    title: 'Courses',
-    url: '/admin/course-management',
-    icon: BookOpen,
-  },
-  {
-    title: 'Reviews',
-    url: '/admin/reviews',
-    icon: ScanEye,
-  },
-]
-
-export function AppSidebar() {
+export function AppSidebar({ items }: { items: NavItem[] }) {
   const pathname = usePathname()
   return (
     <Sidebar collapsible="icon">

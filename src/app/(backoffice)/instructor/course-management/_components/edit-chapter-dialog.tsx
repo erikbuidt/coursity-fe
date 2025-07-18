@@ -51,12 +51,6 @@ export function EditChapterDialog({
     },
   })
 
-  const handleCompleteItem = useCallback((id: number) => {
-    setItems((prevItems) =>
-      prevItems.map((item) => (item.id === id ? { ...item, checked: !item.checked } : item)),
-    )
-  }, [])
-
   const handleSelectItem = (id: number) => {
     if (chapterEditing) setEditingLesson(items.find((l) => l.id === id) || null)
   }
@@ -101,7 +95,6 @@ export function EditChapterDialog({
       ...item,
       position: index + 1, // Update position based on new index
     }))
-    console.log({ newItems, originalLessons })
     const updatedLessons = newItems.filter((item, idx) => {
       const orig = originalLessons.find((o) => o.id === item.id)
       return orig && orig.position !== idx + 1

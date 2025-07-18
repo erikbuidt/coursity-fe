@@ -10,26 +10,21 @@ import { CreateCourseDialog } from './_components/create-course-dialog'
 import { ManagementCourseCard } from '@/components/custom/management-course-card'
 import Pagination from '@/components/custom/pagination'
 import { useSearchParams } from 'next/navigation'
+import { instructorApi } from '@/services/instructorService'
 
 function Course() {
   const searchParams = useSearchParams()
   const page = searchParams.get('page') || 1
   const { getToken } = useAuth()
   const [openCourseDialog, setOpenCourseDialog] = useState<boolean>(false)
-  const {
-    data: courses,
-    error,
-    isLoading,
-  } = useQuery({
+  const { data: courses, isLoading } = useQuery({
     queryFn: async () => {
       const token = await getToken()
-      console.log({ token })
-      return courseApi.getAllCourses({ page: +page, limit: 12 }, token || '')
+      return instructorApi.getTaughtCourses({ page: +page, limit: 12 }, token || '')
     },
     queryKey: ['courses', page],
     staleTime: 10 * 60 * 1000,
   })
-
   return (
     <div className="flex flex-col ">
       <div className="flex justify-between">

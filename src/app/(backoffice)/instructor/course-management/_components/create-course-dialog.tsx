@@ -1,7 +1,6 @@
 import IconInput from '@/components/custom/icon-input'
 import { ImageUpload } from '@/components/custom/image-upload'
-import TodoInput, { Task } from '@/components/custom/todo-input'
-import { z, ZodType } from 'zod' // Add new import
+import TodoInput, { type Task } from '@/components/custom/todo-input'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -21,16 +20,17 @@ import { Separator } from '@/components/ui/separator'
 import { Textarea } from '@/components/ui/textarea'
 import { courseApi } from '@/services/courseService'
 import { useAuth } from '@clerk/nextjs'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { Select } from '@radix-ui/react-select'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { DollarSign } from 'lucide-react'
-import { useForm, Controller } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { toast } from 'sonner'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { type ZodType, z } from 'zod' // Add new import
 type FormData = {
   title: string
   description: string
-  thumbnail: File | null
+  thumbnail: File
   price: number
   category?: string
   will_learns: Task[]
@@ -48,9 +48,11 @@ const createCourseSchema: ZodType<FormData> = z.object({
       required_error: 'Description is required',
     })
     .nonempty(),
-  price: z.any({
-    required_error: 'Price is required',
-  }),
+  price: z.coerce
+    .number({
+      required_error: 'Price is required',
+    })
+    .min(0, { message: 'Price must be a positive number' }),
   thumbnail: z
     .any({
       required_error: 'Thumbnail is required',
@@ -92,7 +94,7 @@ export function CreateCourseDialog({
     defaultValues: {
       title: '',
       description: '',
-      thumbnail: null,
+      thumbnail: undefined,
       price: 0,
       category: '',
       will_learns: [],

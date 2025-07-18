@@ -18,11 +18,13 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '.
 
 function CustomTable<T>({
   data,
+  isLoading,
   columns,
   pagination,
   paginationOptions,
 }: {
   data: T[]
+  isLoading: boolean
   columns: ColumnDef<T>[]
   pagination?: PaginationState
   paginationOptions?: PaginationOptions
@@ -85,7 +87,7 @@ function CustomTable<T>({
           ) : (
             <TableRow>
               <TableCell colSpan={columns.length} className="h-24 text-center">
-                No results.
+                {isLoading ? 'Loading...' : 'No results'}
               </TableCell>
             </TableRow>
           )}

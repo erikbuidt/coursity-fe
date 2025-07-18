@@ -27,12 +27,14 @@ interface MultiSelectProps {
   selected: Option[]
   onChange: (options: Option[]) => void
   placeholder?: string
+  className?: string
 }
 
 export function MultiSelect({
   options,
   selected,
   onChange,
+  className,
   placeholder = 'Select items...',
   ...props
 }: MultiSelectProps) {
@@ -62,7 +64,7 @@ export function MultiSelect({
           // biome-ignore lint/a11y/useSemanticElements: <explanation>
           role="combobox"
           aria-expanded={open}
-          className="w-full justify-between"
+          className={cn('w-full justify-between', className)}
         >
           <div className="flex gap-1 flex-wrap overflow-x-auto max-h-[2.5rem] items-center">
             {selected.length > 0 ? (

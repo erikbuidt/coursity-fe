@@ -37,7 +37,6 @@ export const ImageUpload = (
   }
 
   const onRemove = () => {
-    console.log('remove')
     setSelectedFile(undefined)
     if (field) field.onChange(undefined)
     if (inputRef.current) {

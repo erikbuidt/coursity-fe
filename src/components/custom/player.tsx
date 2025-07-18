@@ -5,48 +5,60 @@ import 'plyr/dist/plyr.css'
 
 export default function Player({
   src,
-  className,
+  height,
   onEnded,
-}: { src: string; className?: string; onEnded?: () => void }) {
+}: { src: string; onEnded?: () => void; height?: number }) {
   const containerRef = useRef<HTMLDivElement | null>(null)
-  const videoRef = useRef<HTMLVideoElement | null>(null)
   const plyrInstance = useRef<Plyr | null>(null)
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (!src || !containerRef.current) return
 
-    // Create video element manually
-    const video = document.createElement('video')
-    video.className = className || 'w-[640px] h-[360px]'
-    containerRef.current.innerHTML = '' // Clear previous video
-    containerRef.current.appendChild(video)
-    videoRef.current = video // Store reference for cleanup
+    // Clean up previous video
+    containerRef.current.innerHTML = ''
 
-    // Initialize Plyr
-    plyrInstance.current = new Plyr(video, {
+    // Create video element
+    const video = document.createElement('video')
+    video.setAttribute('playsinline', '')
+    video.style.width = '100%' // full width
+    video.style.height = '100%' // full height
+    containerRef.current.appendChild(video)
+
+    const plyr = new Plyr(video, {
       controls: ['play', 'progress', 'current-time', 'mute', 'volume', 'fullscreen', 'settings'],
       autoplay: true,
     })
+    plyrInstance.current = plyr
 
-    // Set source
-    plyrInstance.current.source = {
+    plyr.source = {
       type: 'video',
       sources: [{ src, type: 'video/mp4' }],
     }
 
-    plyrInstance.current.on('ended', () => {
-      if (onEnded) {
-        onEnded()
-      }
-    })
-    return () => {
-      if (plyrInstance.current) {
-        plyrInstance.current.destroy()
-        plyrInstance.current = null
-      }
+    // After Plyr initialized, set height on container div
+    const plyrContainer = containerRef.current.querySelector('.plyr') as HTMLElement
+    if (plyrContainer && height) {
+      plyrContainer.style.height = `${height}px` // <-- adjust height here or via prop!
+      // Optionally also set width if needed
+      // plyrContainer.style.width = '640px'
     }
-  }, [src])
+
+    plyr.on('ended', () => {
+      onEnded?.()
+    })
+
+    return () => {
+      // Stop video and clear audio before destroying
+      if (plyr) {
+        plyr.pause()
+        plyr.currentTime = 0
+        plyr.volume = 0
+        plyr.destroy()
+      }
+      plyrInstance.current = null
+    }
+  }, [src, onEnded])
 
   return <div ref={containerRef} />
 }

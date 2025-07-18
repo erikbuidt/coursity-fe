@@ -35,7 +35,7 @@ export default function Collapse({
     <div className={cn('w-full border bg-white shadow-sm', className)}>
       {/* biome-ignore lint/a11y/useButtonType: <explanation> */}
       <button
-        className="w-full flex items-center justify-between px-4 py-2 font-medium text-left"
+        className="w-full flex items-center justify-between px-4 py-2 text-sm font-medium text-left"
         onClick={() => setIsOpen(!isOpen)}
       >
         <span>{title}</span>
