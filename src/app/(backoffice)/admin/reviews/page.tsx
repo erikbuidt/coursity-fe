@@ -62,7 +62,7 @@ function DataTableDemo() {
 
   const [selected, setSelected] = useState<Option[]>(initialSelected)
 
-  // Fetch courses using React Query with filterConfig built from URL params
+  // // Fetch courses using React Query with filterConfig built from URL params
   const { data: courses, isLoading } = useQuery({
     queryKey: [
       'courses-reviews',
