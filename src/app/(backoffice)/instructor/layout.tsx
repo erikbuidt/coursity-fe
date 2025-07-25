@@ -1,4 +1,5 @@
 'use client'
+import Guard from '@/components/custom/guard'
 import { ThemeSwitch } from '@/components/custom/theme-switch'
 import { AppSidebar } from '@/components/layout/app-sidebar'
 import type { NavItem } from '@/components/layout/types'
@@ -25,7 +26,7 @@ export default function InstructorLayout({
   children: React.ReactNode
 }) {
   return (
-    <>
+    <Guard action="view" resource="instructor_area">
       <AppSidebar items={items} />
       <div className="w-full px-4">
         <div className="flex">
@@ -39,6 +40,6 @@ export default function InstructorLayout({
         </div>
         <div className="mt-4 h-[100%]">{children}</div>
       </div>
-    </>
+    </Guard>
   )
 }

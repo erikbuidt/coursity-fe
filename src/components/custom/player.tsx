@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import 'plyr/dist/plyr.css'
 
 export default function Player({
@@ -15,7 +15,21 @@ export default function Player({
   useEffect(() => {
     setIsClient(true)
   }, [])
-
+  const cleanupPlyr = useCallback((instance: any) => {
+    try {
+      instance.pause()
+      instance.volume = 0
+      instance.muted = true
+      instance.currentTime = 0
+      instance.source = {
+        type: 'video',
+        sources: [],
+      }
+      instance.destroy()
+    } catch (error) {
+      console.error('Error cleaning up Plyr instance:', error)
+    }
+  }, [])
   useEffect(() => {
     if (!isClient || !src || !containerRef.current || typeof document === 'undefined') return
 
@@ -24,7 +38,13 @@ export default function Player({
       try {
         const Plyr = (await import('plyr')).default
 
-        // Clean up previous video
+        // Clean up previous Plyr instance and audio before creating new one
+        if (plyrInstance.current) {
+          cleanupPlyr(plyrInstance.current)
+          plyrInstance.current = null
+        }
+
+        // Clean up previous video container
         if (containerRef.current) {
           containerRef.current.innerHTML = ''
 
@@ -74,18 +94,14 @@ export default function Player({
     return () => {
       // Stop video and clear audio before destroying
       if (plyrInstance.current) {
-        try {
-          plyrInstance.current.pause()
-          plyrInstance.current.currentTime = 0
-          plyrInstance.current.volume = 0
-          plyrInstance.current.destroy()
-        } catch (error) {
-          console.error('Error destroying Plyr:', error)
-        }
+        console.log('destroy')
+        console.log(plyrInstance.current)
+
+        cleanupPlyr(plyrInstance.current)
         plyrInstance.current = null
       }
     }
-  }, [src, onEnded, isClient, height])
+  }, [src, onEnded, isClient, height, cleanupPlyr])
 
   // Show loading state during SSR or while client is initializing
   if (!isClient) {

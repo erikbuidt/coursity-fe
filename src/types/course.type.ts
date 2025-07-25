@@ -18,6 +18,7 @@ export type Course = {
   chapters: Chapter[]
   is_enrolled: boolean
   status: COURSE_STATUS
+  instructor_id: string
 }
 export type Pagination<T> = {
   items: T[]

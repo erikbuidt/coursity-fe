@@ -1,5 +1,11 @@
+import Guard from '@/components/custom/guard'
+
 function Dashboard() {
-  return <div>Dashboard</div>
+  return (
+    <Guard action="view" resource="dashboard_page">
+      <div>Dashboard</div>
+    </Guard>
+  )
 }
 
 export default Dashboard

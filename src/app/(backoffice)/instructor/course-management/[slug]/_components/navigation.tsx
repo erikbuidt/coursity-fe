@@ -41,7 +41,7 @@ function Navigation() {
         <li
           className={cn('hover:bg-accent p-2 cursor-pointer', pathname === 'goal' && 'bg-accent')}
         >
-          <Link className="flex gap-2" href={`/admin/course-management/${slug}/goal`}>
+          <Link className="flex gap-2" href={`/instructor/course-management/${slug}/goal`}>
             <Circle />
             <span> Intended learners</span>
           </Link>
@@ -55,7 +55,7 @@ function Navigation() {
             pathname === 'curriculum' && 'bg-accent',
           )}
         >
-          <Link className="flex gap-2" href={`/admin/course-management/${slug}/curriculum`}>
+          <Link className="flex gap-2" href={`/instructor/course-management/${slug}/curriculum`}>
             <Circle />
             <span> Curriculum</span>
           </Link>
@@ -66,7 +66,7 @@ function Navigation() {
         <li
           className={cn('hover:bg-accent p-2 cursor-pointer', pathname === 'basics' && 'bg-accent')}
         >
-          <Link className="flex gap-2" href={`/admin/course-management/${slug}/basics`}>
+          <Link className="flex gap-2" href={`/instructor/course-management/${slug}/basics`}>
             <Circle />
             <span> Course and landing page</span>
           </Link>
@@ -77,7 +77,7 @@ function Navigation() {
             pathname === 'pricing' && 'bg-accent',
           )}
         >
-          <Link className="flex gap-2" href={`/admin/course-management/${slug}/pricing`}>
+          <Link className="flex gap-2" href={`/instructor/course-management/${slug}/pricing`}>
             <Circle />
             <span> Pricing</span>
           </Link>
@@ -88,7 +88,7 @@ function Navigation() {
             pathname === 'promotion' && 'bg-accent',
           )}
         >
-          <Link className="flex gap-2" href={`/admin/course-management/${slug}/promotion`}>
+          <Link className="flex gap-2" href={`/instructor/course-management/${slug}/promotion`}>
             <Circle />
             <span> Promotion</span>
           </Link>

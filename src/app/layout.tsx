@@ -5,6 +5,7 @@ import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { Toaster } from '@/components/ui/sonner'
+import { AbilityLoader } from '@/contexts/ability-context'
 const geistSans = Geist({
   variable: '--font-geist-sans',
   subsets: ['latin'],
@@ -27,25 +28,27 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en">
-        <body className={`${geistSans.variable} ${geistMono.variable} overflow-x-hidden`}>
-          <ReactQueryProvider>
-            {children}
-            <ReactQueryDevtools initialIsOpen />
-          </ReactQueryProvider>
-          <Toaster
-            position="top-center"
-            toastOptions={{
-              classNames: {
-                success: '!bg-green-500',
-                error: '!bg-red-500',
-                title: '!text-white',
-                icon: '!text-white',
-              },
-            }}
-          />
-        </body>
-      </html>
+      <AbilityLoader>
+        <html lang="en">
+          <body className={`${geistSans.variable} ${geistMono.variable} overflow-x-hidden`}>
+            <ReactQueryProvider>
+              {children}
+              <ReactQueryDevtools initialIsOpen />
+            </ReactQueryProvider>
+            <Toaster
+              position="top-center"
+              toastOptions={{
+                classNames: {
+                  success: '!bg-green-500',
+                  error: '!bg-red-500',
+                  title: '!text-white',
+                  icon: '!text-white',
+                },
+              }}
+            />
+          </body>
+        </html>
+      </AbilityLoader>
     </ClerkProvider>
   )
 }

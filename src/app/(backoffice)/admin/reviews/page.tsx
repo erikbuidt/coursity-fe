@@ -26,6 +26,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { Input } from '@/components/ui/input'
 import { useDebounce } from '@/hooks/use-debounce'
 import PreviewCourseDialog from './_components/preview-course-dialog'
+import Guard from '@/components/custom/guard'
 
 const options: Option[] = [
   { label: 'In Review', value: 'in_review' },
@@ -294,48 +295,50 @@ function DataTableDemo() {
   )
 
   return (
-    <div className="w-full">
-      <div className="flex items-center py-4 gap-2 max-w-xl">
-        <Input
-          placeholder="Search..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          aria-label="Search courses"
-        />
-        <MultiSelect
-          onChange={setSelected}
-          options={options}
-          selected={selected}
-          placeholder="Status"
-          className="max-w-[40%]"
-          aria-label="Filter by status"
-        />
-      </div>
-
-      <div className="rounded-md border">
-        <Table
-          isLoading={isLoading}
-          data={courses?.items || []}
-          columns={columns}
-          pagination={{
-            pageIndex: pagination.pageIndex,
-            pageSize: pagination.pageSize,
-          }}
-          paginationOptions={{
-            pageCount: courses?.meta?.total_pages ?? 1,
-            manualPagination: true,
-            onPaginationChange: handlePaginationChange,
-          }}
-        />
-        {course && (
-          <PreviewCourseDialog
-            open={!!coursePreviewing}
-            onChange={() => setCoursePreviewing(null)}
-            course={course}
+    <Guard action="view" resource="review_page">
+      <div className="w-full">
+        <div className="flex items-center py-4 gap-2 max-w-xl">
+          <Input
+            placeholder="Search..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            aria-label="Search courses"
           />
-        )}
+          <MultiSelect
+            onChange={setSelected}
+            options={options}
+            selected={selected}
+            placeholder="Status"
+            className="max-w-[40%]"
+            aria-label="Filter by status"
+          />
+        </div>
+
+        <div className="rounded-md border">
+          <Table
+            isLoading={isLoading}
+            data={courses?.items || []}
+            columns={columns}
+            pagination={{
+              pageIndex: pagination.pageIndex,
+              pageSize: pagination.pageSize,
+            }}
+            paginationOptions={{
+              pageCount: courses?.meta?.total_pages ?? 1,
+              manualPagination: true,
+              onPaginationChange: handlePaginationChange,
+            }}
+          />
+          {course && (
+            <PreviewCourseDialog
+              open={!!coursePreviewing}
+              onChange={() => setCoursePreviewing(null)}
+              course={course}
+            />
+          )}
+        </div>
       </div>
-    </div>
+    </Guard>
   )
 }
 
