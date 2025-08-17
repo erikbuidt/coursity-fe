@@ -149,7 +149,6 @@ async function updateCourse(
 async function submitToReview(slug: string, token: string): Promise<Course | null> {
   try {
     // biome-ignore lint/complexity/noForEach: <explanation>
-    console.log('here')
     const res = await http.post<SuccessResApi<Course>>(
       `/courses/${slug}/submit-to-review`,
       {},
@@ -226,6 +225,33 @@ async function createCourse(payload: CreateCoursePayload, token: string): Promis
     return null
   }
 }
+
+async function getMyCourses(token: string): Promise<Course[]> {
+  try {
+    const res = await http.get<SuccessResApi<Course[]>>(
+      '/courses/my-courses/learning',
+      token
+        ? {
+            headers: {
+              authorization: `Bearer ${token}`,
+            },
+          }
+        : {},
+    )
+    return res.payload.data
+  } catch (error: any) {
+    console.error('Error fetching my courses:', error)
+
+    if (error.response) {
+      console.error('Status code:', error.response.status)
+      console.error('Error data:', error.response.data)
+    } else {
+      console.error('Error message:', error.message)
+    }
+
+    throw new Error('Failed to fetch my courses. Please try again later.')
+  }
+}
 export const courseApi = {
   getCourse,
   getAllCourses,
@@ -234,4 +260,5 @@ export const courseApi = {
   createCourse,
   updateCourse,
   submitToReview,
+  getMyCourses,
 }

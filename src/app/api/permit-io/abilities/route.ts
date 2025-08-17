@@ -19,7 +19,6 @@ export async function POST(request: NextRequest) {
       await request.json()
     const { searchParams } = new URL(request.url)
     const userId = searchParams.get('user')
-    console.log({ userId, resourcesAndActions })
     if (!userId) {
       return new Response(JSON.stringify({ error: 'User not found' }), {
         status: 404,
@@ -47,7 +46,6 @@ export async function POST(request: NextRequest) {
     }
 
     const permittedList = await Promise.all(resourcesAndActions.map(checkPermissions))
-    console.log(permittedList) // Printing the result of the checks
 
     return new Response(JSON.stringify({ permittedList }), {
       status: 200,

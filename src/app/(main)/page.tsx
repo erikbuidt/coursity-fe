@@ -163,7 +163,7 @@ export default async function Home() {
         <h2 className="text-xl md:text-2xl font-bold text-center mt-6 md:mt-8">
           Most Popular Courses
         </h2>
-        <FadeInStaggered className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-6 md:mt-10">
+        <FadeInStaggered className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-6 md:mt-10">
           {courses.map((course, i) => (
             <CourseCard key={course.id} course={course} />
           ))}
